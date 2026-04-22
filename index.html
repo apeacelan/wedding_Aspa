@@ -817,28 +817,47 @@ body{background:var(--bg);color:var(--text);font-family:'Raleway',sans-serif;ove
 </footer>
 
 <script>
-function enterSite(){
+function enterSite() {
   document.getElementById('ov').classList.add('hidden');
-  const m=document.getElementById('bg-music');
-  m.volume=0.5;m.play().catch(()=>{});
+  const m = document.getElementById('bg-music');
+  m.volume = 0.5;
+  m.play().catch(() => {});
   document.getElementById('mb').classList.add('visible');
-  const pi=setInterval(spawnPetal,650);
-  setTimeout(()=>clearInterval(pi),28000);
-  setTimeout(()=>{
-    let go=true;
-    const stop=()=>{go=false;};
-    ['wheel','touchstart','mousedown','keydown'].forEach(e=>window.addEventListener(e,stop,{once:true}));
-    const pH=document.body.scrollHeight-window.innerHeight;
-    const step=()=>{
-      if(!go)return;
-      const r=document.querySelector('.rsvp-wrap');
-      if(r&&window.scrollY>=r.offsetTop-80)return;
-      if(window.scrollY>=pH)return;
-      window.scrollBy({top:1.6,behavior:'instant'});
-      setTimeout(step,18);
+
+  // Лепестки
+  const pi = setInterval(spawnPetal, 650);
+  setTimeout(() => clearInterval(pi), 28000);
+
+  // Автолистание
+  setTimeout(() => {
+    let go = true;
+    const stop = () => { go = false; };
+
+    // Слушаем прерывание пользователем
+    ['wheel', 'touchstart', 'mousedown', 'keydown'].forEach(e => 
+      window.addEventListener(e, stop, { once: true })
+    );
+
+    const step = () => {
+      if (!go) return;
+
+      const r = document.querySelector('.rsvp-wrap');
+      const pH = document.body.scrollHeight - window.innerHeight;
+      const currentScroll = window.scrollY;
+
+      // Условия остановки
+      if (r && currentScroll >= r.offsetTop - 80) return;
+      if (currentScroll >= pH) return;
+
+      // Скроллим на небольшое расстояние
+      window.scrollBy({ top: 1.0, behavior: 'instant' });
+
+      // Рекурсивно вызываем следующий кадр анимации
+      requestAnimationFrame(step);
     };
-    step();
-  },1200);
+
+    requestAnimationFrame(step);
+  }, 1200);
 }
 
 let mPlay=true;
