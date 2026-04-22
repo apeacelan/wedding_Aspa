@@ -189,7 +189,20 @@ body{background:var(--bg);color:var(--text);font-family:'Raleway',sans-serif;ove
 .poem-motif.br{bottom:1.2rem;right:1.2rem;transform:rotate(180deg);}
 .poem-inner{position:relative;max-width:580px;margin:0 auto;}
 .q-mark{font-family:'Cormorant Garamond',serif;font-size:5rem;color:var(--rose-d);opacity:0.4;line-height:0.6;display:block;margin-bottom:1.3rem;}
-.poem-text{font-family:'Cormorant Garamond',serif;font-size:clamp(1.1rem,2.4vw,1.6rem);font-style:italic;color:#6A6280;line-height:2.2;}
+.poem-text {
+  font-family: 'Cormorant Garamond', serif;
+  /* Увеличили минимальный и максимальный порог размера */
+  font-size: clamp(1.3rem, 3vw, 1.85rem); 
+  font-style: italic;
+  /* Сделали цвет чуть темнее для контраста (был #6A6280) */
+  color: #4A4458; 
+  /* Уменьшили с 2.2 до 1.8, чтобы строки были ближе и текст читался как единое целое */
+  line-height: 1.8; 
+  /* Добавили веса шрифту, если он кажется слишком бледным */
+  font-weight: 500; 
+  /* Минимальный отступ между буквами для четкости */
+  letter-spacing: 0.01em; 
+}
 .poem-by{margin-top:1.3rem;font-size:0.68rem;letter-spacing:0.32em;color:var(--gold);text-transform:uppercase;}
 
 /* ══ INVITATION ══ */
@@ -616,7 +629,7 @@ body{background:var(--bg);color:var(--text);font-family:'Raleway',sans-serif;ove
         <path d="M24 14v10l7 4" stroke="#C4965A" stroke-width="2.3" stroke-linecap="round"/>
       </svg>
       <div class="d-lbl">Уақыты</div>
-      <div class="d-val">18:00</div>
+      <div class="d-val">17:00</div>
       <div class="d-sub"></div>
     </div>
     <div class="d-card">
@@ -625,7 +638,7 @@ body{background:var(--bg);color:var(--text);font-family:'Raleway',sans-serif;ove
         <circle cx="24" cy="18" r="4" fill="#C4965A" opacity="0.6"/>
       </svg>
       <div class="d-lbl">Мекенжайы</div>
-      <div class="d-val">«Томирис»</div>
+      <div class="d-val">«Томирис» мейрамханасы</div>
       <div class="d-sub">Астана қ., Қорғалжын шоссе, 9</div>
       <a class="map-btn" href="https://2gis.kz/astana/geo/70000001074996677" target="_blank" rel="noopener">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
@@ -812,7 +825,7 @@ body{background:var(--bg);color:var(--text);font-family:'Raleway',sans-serif;ove
     </svg>
   </div>
   <div class="f-names">Аспандияр & Жұлдыз</div>
-  <p class="f-text" style="margin-top:0.4rem;">31 · 07 · 2026 &nbsp;·&nbsp; Астана, «Томирис» тойханасы</p>
+  <p class="f-text" style="margin-top:0.4rem;">31 · 07 · 2026 &nbsp;·&nbsp; Астана, «Томирис» мейрамханасы</p>
   <p style="margin-top:1.5rem;font-family:'Cormorant Garamond',serif;font-size:0.88rem;color:var(--text-s);opacity:0.55;font-style:italic;position:relative;">Бақытты отбасының бастауы — сіздермен бірге</p>
 </footer>
 
@@ -868,7 +881,7 @@ function toggleMusic(){
   document.getElementById('icon-pause').style.display=mPlay?'block':'none';
 }
 
-const wD=new Date('2026-07-31T18:00:00');
+const wD=new Date('2026-07-31T17:00:00');
 function tick(){
   const d=wD-new Date();
   if(d<=0){document.getElementById('countdown').innerHTML='<p style="font-family:\'Cinzel\',serif;font-size:1.3rem;color:#7A6D90;">Той басталды! 🎉</p>';return;}
