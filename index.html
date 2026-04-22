@@ -4,364 +4,508 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Аспандияр & Жұлдыз — Тойға шақыру</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel+Decorative:wght@400;700&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Cinzel:wght@400;600&family=Raleway:wght@300;400;500&family=Marck+Script&display=swap" rel="stylesheet">
 <style>
+/*
+  PALETTE — всё светлое и пастельное
+  ────────────────────────────────────
+  Тёплый белый + мягкая лиловость + шалфей
+  Ни одного тёмного фона
+*/
 :root {
-  --bx:      #6B1A2A;
-  --bx-dark: #3A0B14;
-  --bx-mid:  #550F1E;
-  --bx-l:    #8C2438;
-  --gold:    #C9A358;
-  --gold-l:  #E2C47A;
-  --gold-p:  #F0DFA8;
-  --cream:   #FDF6EC;
-  --cream-d: #F5E8D0;
-  --text:    #3A1420;
+  --rose:    #D4C5E2;   /* пыльная лиловость — главный цвет */
+  --rose-d:  #BFB0D0;   /* чуть глубже — для акцентов */
+  --sage:    #C2D1B4;   /* мягкий шалфей */
+  --sage-d:  #ADBFA0;   /* шалфей чуть насыщеннее */
+  --bg:      #FDFCFA;   /* тёплый молочный */
+  --bg-2:    #F6F2EE;   /* кремовый */
+  --bg-3:    #EEE9F3;   /* лиловый крем */
+  --white:   #FFFFFF;
+  --gold:    #C4965A;   /* приглушённое золото */
+  --gold-l:  #D9B07A;
+  --text:    #3D3530;   /* тёплый тёмно-коричневый — только для текста */
+  --text-s:  #7A706A;
 }
+
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{background:var(--cream);color:var(--text);font-family:'Raleway',sans-serif;overflow-x:hidden;}
+body{background:var(--bg);color:var(--text);font-family:'Raleway',sans-serif;overflow-x:hidden;}
 
-/* ── ENTRANCE ── */
-#ov{position:fixed;inset:0;z-index:9999;background:var(--bx-dark);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;transition:opacity 1.3s ease,visibility 1.3s ease;}
+/* ══ ENTRANCE ══ */
+#ov{
+  position:fixed;inset:0;z-index:9999;
+  background:linear-gradient(155deg,#EDE7F6 0%,#E8F0E0 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:2rem;
+  transition:opacity 1.4s ease,visibility 1.4s ease;
+}
 #ov.hidden{opacity:0;visibility:hidden;pointer-events:none;}
-.ov-bg{position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,var(--gold) 0,var(--gold) 1px,transparent 0,transparent 50%),repeating-linear-gradient(-45deg,var(--gold) 0,var(--gold) 1px,transparent 0,transparent 50%);background-size:36px 36px;opacity:0.04;}
-/* corner ornaments on overlay */
-.ov-corner{position:absolute;width:90px;height:90px;opacity:0.25;}
-.ov-corner.tl{top:1rem;left:1rem;}
-.ov-corner.tr{top:1rem;right:1rem;transform:scaleX(-1);}
-.ov-corner.bl{bottom:1rem;left:1rem;transform:scaleY(-1);}
-.ov-corner.br{bottom:1rem;right:1rem;transform:scale(-1);}
-.ov-shanyraq{animation:spinSlow 22s linear infinite;margin-bottom:2rem;}
+
+/* corner ornaments */
+.oc{position:absolute;opacity:0.35;}
+.oc.tl{top:0;left:0;}
+.oc.tr{top:0;right:0;transform:scaleX(-1);}
+.oc.bl{bottom:0;left:0;transform:scaleY(-1);}
+.oc.br{bottom:0;right:0;transform:scale(-1);}
+
+.ov-sh{animation:spinSlow 24s linear infinite;margin-bottom:1.6rem;}
 @keyframes spinSlow{to{transform:rotate(360deg);}}
-.ov-names{font-family:'Cinzel Decorative',serif;font-size:clamp(1.8rem,5vw,3.5rem);color:var(--gold-l);line-height:1.3;text-shadow:0 2px 24px rgba(201,163,88,0.4);}
-.ov-names .amp{display:block;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.6em;color:var(--gold-p);margin:0.2rem 0;}
-.ov-sub{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--cream-d);opacity:0.65;margin-top:0.8rem;letter-spacing:0.2em;font-style:italic;}
-.enter-btn{margin-top:2.5rem;background:transparent;border:1px solid var(--gold);color:var(--gold-p);padding:0.9rem 3rem;font-family:'Cinzel Decorative',serif;font-size:0.85rem;letter-spacing:0.2em;cursor:pointer;position:relative;overflow:hidden;transition:color 0.4s,background 0.4s;}
-.enter-btn::before{content:'';position:absolute;inset:3px;border:1px solid rgba(201,163,88,0.3);pointer-events:none;}
-.enter-btn:hover{background:var(--gold);color:var(--bx-dark);}
-.ov-note{margin-top:1rem;font-size:0.7rem;color:var(--gold-p);opacity:0.4;letter-spacing:0.15em;}
 
-/* ── MUSIC BTN ── */
-#mb{position:fixed;bottom:1.8rem;right:1.8rem;z-index:1000;width:52px;height:52px;border-radius:50%;background:var(--bx);border:1.5px solid var(--gold);color:var(--gold-p);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(107,26,42,0.4);opacity:0;pointer-events:none;transition:opacity 0.5s,background 0.3s,transform 0.2s;}
+.ov-names{
+  font-family:'Marck Script',cursive;
+  font-size:clamp(2.2rem,6.5vw,4.2rem);
+  color:#7A6D90;
+  line-height:1.3;
+  text-shadow:0 2px 12px rgba(180,160,200,0.25);
+}
+.ov-names .amp{
+  display:block;
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-size:0.52em;
+  color:var(--gold);margin:0.15rem 0;letter-spacing:0.22em;
+}
+.ov-sub{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1rem;color:var(--text-s);
+  margin-top:0.7rem;letter-spacing:0.22em;font-style:italic;
+}
+.ov-btn{
+  margin-top:2rem;background:transparent;
+  border:1px solid var(--rose-d);
+  color:#7A6D90;padding:0.85rem 2.8rem;
+  font-family:'Cinzel',serif;font-size:0.78rem;letter-spacing:0.25em;
+  cursor:pointer;position:relative;transition:background 0.35s,color 0.35s;
+}
+.ov-btn::before{content:'';position:absolute;inset:4px;border:1px solid rgba(180,160,200,0.3);}
+.ov-btn:hover{background:var(--rose);color:#5A4E70;}
+.ov-note{margin-top:0.8rem;font-size:0.67rem;color:var(--text-s);opacity:0.6;letter-spacing:0.15em;}
+
+/* ══ MUSIC BTN ══ */
+#mb{
+  position:fixed;bottom:1.6rem;right:1.6rem;z-index:1000;
+  width:46px;height:46px;border-radius:50%;
+  background:var(--rose);border:1px solid var(--rose-d);
+  color:#6A5E80;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 16px rgba(180,160,210,0.3);
+  opacity:0;pointer-events:none;transition:opacity 0.5s,transform 0.2s;
+}
 #mb.visible{opacity:1;pointer-events:all;}
-#mb:hover{background:var(--bx-l);transform:scale(1.07);}
-#mb svg{width:22px;height:22px;}
+#mb:hover{transform:scale(1.08);background:var(--rose-d);}
+#mb svg{width:18px;height:18px;}
 
-/* ── PETALS ── */
+/* ══ PETALS ══ */
 .petal{position:fixed;top:-40px;pointer-events:none;z-index:100;opacity:0;animation:petalFall linear infinite;}
-@keyframes petalFall{0%{transform:translateY(0) rotate(0deg) translateX(0);opacity:0;}10%{opacity:0.65;}90%{opacity:0.35;}100%{transform:translateY(110vh) rotate(720deg) translateX(60px);opacity:0;}}
+@keyframes petalFall{
+  0%{transform:translateY(0) rotate(0deg) translateX(0);opacity:0;}
+  8%{opacity:0.85;}88%{opacity:0.25;}
+  100%{transform:translateY(110vh) rotate(580deg) translateX(45px);opacity:0;}
+}
 
-/* ── HERO ── */
-.hero{min-height:100vh;background:var(--bx-dark);position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;}
-.hero-bg{position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,var(--gold) 0,var(--gold) 1px,transparent 0,transparent 50%),repeating-linear-gradient(-45deg,var(--gold) 0,var(--gold) 1px,transparent 0,transparent 50%);background-size:40px 40px;opacity:0.05;}
-/* Hero corner ornaments */
-.hero-corner{position:absolute;opacity:0.18;}
-.hero-corner.tl{top:1.5rem;left:1.5rem;}
-.hero-corner.tr{top:1.5rem;right:1.5rem;transform:scaleX(-1);}
-.hero-corner.bl{bottom:1.5rem;left:1.5rem;transform:scaleY(-1);}
-.hero-corner.br{bottom:1.5rem;right:1.5rem;transform:scale(-1);}
-.hr{position:absolute;border-radius:50%;border:1px solid;animation:ringRot linear infinite;top:50%;left:50%;}
-.hr:nth-child(5){width:580px;height:580px;border-color:rgba(201,163,88,0.13);animation-duration:70s;transform:translate(-50%,-50%);}
-.hr:nth-child(6){width:400px;height:400px;border-color:rgba(201,163,88,0.19);animation-duration:44s;animation-direction:reverse;transform:translate(-50%,-50%);}
-.hr:nth-child(7){width:760px;height:760px;border-color:rgba(140,36,56,0.17);animation-duration:92s;transform:translate(-50%,-50%);}
+/* ══ HERO ══ */
+.hero{
+  min-height:100vh;
+  background:linear-gradient(150deg, #EDE7F6 0%, #E6EEE0 50%, #EDE7F6 100%);
+  position:relative;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;overflow:hidden;
+}
+/* soft rings */
+.hr{position:absolute;border-radius:50%;animation:ringRot linear infinite;top:50%;left:50%;}
+.hr:nth-child(1){width:520px;height:520px;border:1px solid rgba(180,160,210,0.18);animation-duration:80s;transform:translate(-50%,-50%);}
+.hr:nth-child(2){width:360px;height:360px;border:1px solid rgba(160,185,148,0.2);animation-duration:55s;animation-direction:reverse;transform:translate(-50%,-50%);}
+.hr:nth-child(3){width:680px;height:680px;border:1px solid rgba(180,160,210,0.1);animation-duration:110s;transform:translate(-50%,-50%);}
 @keyframes ringRot{from{transform:translate(-50%,-50%) rotate(0deg);}to{transform:translate(-50%,-50%) rotate(360deg);}}
-.hero-c{position:relative;z-index:2;text-align:center;padding:2rem;}
-.hero-tag{font-size:0.7rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold-p);opacity:0;margin-bottom:1.5rem;animation:fadeUp 1s ease forwards 0.3s;}
-.hero-sh{margin:0 auto 1.5rem;opacity:0;animation:fadeDown 1.2s ease forwards 0.1s;}
-.hero-names{font-family:'Cinzel Decorative',serif;font-size:clamp(2.2rem,6vw,4.5rem);color:var(--gold-l);line-height:1.2;opacity:0;animation:fadeUp 1.2s ease forwards 0.6s;text-shadow:0 2px 30px rgba(201,163,88,0.25);}
-.hero-names .amp{display:block;font-size:0.55em;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold-p);margin:0.3rem 0;}
-.hero-sub{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-style:italic;color:var(--cream-d);margin-top:1.8rem;letter-spacing:0.12em;opacity:0;animation:fadeUp 1s ease forwards 1s;}
-.hero-date{margin-top:0.7rem;font-family:'Cinzel Decorative',serif;font-size:0.95rem;color:var(--gold);letter-spacing:0.3em;opacity:0;animation:fadeUp 1s ease forwards 1.2s;}
-.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.5rem;color:var(--gold-p);font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;opacity:0;animation:fadeUp 1s ease forwards 2s,hintBounce 2s ease-in-out infinite 3s;}
-.scroll-hint::after{content:'';display:block;width:1px;height:38px;background:linear-gradient(to bottom,var(--gold),transparent);}
-@keyframes hintBounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(8px);}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
-@keyframes fadeDown{from{opacity:0;transform:translateY(-22px);}to{opacity:1;transform:translateY(0);}}
 
-/* ── REVEAL ── */
-.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.9s ease,transform 0.9s ease;}
+.hc{position:absolute;opacity:0.3;}
+.hc.tl{top:1.2rem;left:1.2rem;}
+.hc.tr{top:1.2rem;right:1.2rem;transform:scaleX(-1);}
+.hc.bl{bottom:1.2rem;left:1.2rem;transform:scaleY(-1);}
+.hc.br{bottom:1.2rem;right:1.2rem;transform:scale(-1);}
+
+.hero-c{position:relative;z-index:2;text-align:center;padding:2rem;}
+.hero-tag{
+  font-size:0.67rem;letter-spacing:0.45em;text-transform:uppercase;
+  color:var(--text-s);opacity:0;margin-bottom:1.4rem;
+  animation:fadeUp 1s ease forwards 0.3s;
+}
+.hero-sh{margin:0 auto 1.4rem;opacity:0;animation:fadeDown 1.2s ease forwards 0.1s;}
+.hero-names{
+  font-family:'Marck Script',cursive;
+  font-size:clamp(2.6rem,8vw,5.8rem);
+  color:#7A6D90;
+  line-height:1.2;opacity:0;
+  animation:fadeUp 1.2s ease forwards 0.6s;
+  text-shadow:0 2px 20px rgba(180,160,210,0.2);
+}
+.hero-names .amp{
+  display:block;font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-size:0.48em;
+  color:var(--gold);margin:0.2rem 0;letter-spacing:0.28em;
+}
+.hero-sub{
+  font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-style:italic;
+  color:var(--text-s);margin-top:1.6rem;letter-spacing:0.14em;
+  opacity:0;animation:fadeUp 1s ease forwards 1s;
+}
+.hero-date{
+  margin-top:0.6rem;font-family:'Cinzel',serif;font-size:0.85rem;
+  color:var(--gold);letter-spacing:0.35em;
+  opacity:0;animation:fadeUp 1s ease forwards 1.2s;
+}
+.scroll-hint{
+  position:absolute;bottom:1.8rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:0.4rem;
+  color:var(--text-s);font-size:0.58rem;letter-spacing:0.25em;text-transform:uppercase;
+  opacity:0;animation:fadeUp 1s ease forwards 2s,hintBounce 2s ease-in-out infinite 3s;
+}
+.scroll-hint::after{content:'';display:block;width:1px;height:32px;background:linear-gradient(to bottom,var(--rose-d),transparent);}
+@keyframes hintBounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(6px);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-18px);}to{opacity:1;transform:translateY(0);}}
+
+/* ══ REVEAL ══ */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity 0.85s ease,transform 0.85s ease;}
 .reveal.visible{opacity:1;transform:translateY(0);}
 
-/* ── SHARED ── */
-.s-label{font-size:0.68rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--bx-l);text-align:center;margin-bottom:0.5rem;}
-.s-title{font-family:'Cinzel Decorative',serif;font-size:clamp(1.2rem,2.8vw,1.9rem);color:var(--bx);text-align:center;}
-.s-title.light{color:var(--gold-l);}
-.s-label.light{color:var(--gold-p);opacity:0.65;}
-.kzd{display:flex;align-items:center;justify-content:center;gap:1rem;margin:0.5rem 0 2rem;}
-.kzd .ln{height:1px;width:80px;background:linear-gradient(to right,transparent,var(--gold));}
+/* ══ SHARED ══ */
+.s-lbl{font-size:0.65rem;letter-spacing:0.42em;text-transform:uppercase;color:var(--sage-d);text-align:center;margin-bottom:0.45rem;}
+.s-ttl{font-family:'Cinzel',serif;font-size:clamp(1.1rem,2.5vw,1.7rem);color:#7A6D90;text-align:center;}
+.kzd{display:flex;align-items:center;justify-content:center;gap:0.9rem;margin:0.5rem 0 1.8rem;}
+.kzd .ln{height:1px;width:65px;background:linear-gradient(to right,transparent,var(--gold));}
 .kzd .ln.r{background:linear-gradient(to left,transparent,var(--gold));}
-
-/* ── HORIZONTAL ORNAMENT BAND ── */
 .kz-band{width:100%;overflow:hidden;line-height:0;display:block;}
 
-/* ── POEM ── */
-.poem-wrap{background:var(--bx-mid);padding:5rem 2rem;text-align:center;position:relative;overflow:hidden;}
-.poem-wrap::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,var(--gold) 0,var(--gold) 1px,transparent 1px,transparent 60px),repeating-linear-gradient(90deg,var(--gold) 0,var(--gold) 1px,transparent 1px,transparent 60px);opacity:0.035;}
-.poem-inner{position:relative;max-width:600px;margin:0 auto;}
-.q-mark{font-family:'Cormorant Garamond',serif;font-size:5rem;color:var(--gold);opacity:0.3;line-height:0.6;display:block;margin-bottom:1.5rem;}
-.poem-text{font-family:'Cormorant Garamond',serif;font-size:clamp(1.15rem,2.5vw,1.65rem);font-style:italic;color:var(--cream-d);line-height:2.1;}
-.poem-by{margin-top:1.5rem;font-size:0.72rem;letter-spacing:0.3em;color:var(--gold);text-transform:uppercase;}
-/* Floating corner motifs in poem */
-.poem-motif{position:absolute;opacity:0.12;}
-.poem-motif.tl{top:1.5rem;left:1.5rem;}
-.poem-motif.br{bottom:1.5rem;right:1.5rem;transform:rotate(180deg);}
+/* ══ POEM ══ */
+.poem-wrap{
+  background:linear-gradient(150deg,#EDE7F6 0%,#E6EEE0 100%);
+  padding:4.5rem 2rem;text-align:center;position:relative;overflow:hidden;
+}
+.poem-wrap::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,rgba(180,160,210,0.05) 0,rgba(180,160,210,0.05) 1px,transparent 1px,transparent 48px),
+             repeating-linear-gradient(90deg,rgba(180,160,210,0.05) 0,rgba(180,160,210,0.05) 1px,transparent 1px,transparent 48px);
+}
+.poem-motif{position:absolute;opacity:0.2;}
+.poem-motif.tl{top:1.2rem;left:1.2rem;}
+.poem-motif.br{bottom:1.2rem;right:1.2rem;transform:rotate(180deg);}
+.poem-inner{position:relative;max-width:580px;margin:0 auto;}
+.q-mark{font-family:'Cormorant Garamond',serif;font-size:5rem;color:var(--rose-d);opacity:0.4;line-height:0.6;display:block;margin-bottom:1.3rem;}
+.poem-text{font-family:'Cormorant Garamond',serif;font-size:clamp(1.1rem,2.4vw,1.6rem);font-style:italic;color:#6A6280;line-height:2.2;}
+.poem-by{margin-top:1.3rem;font-size:0.68rem;letter-spacing:0.32em;color:var(--gold);text-transform:uppercase;}
 
-/* ── DETAILS ── */
-.details-section{padding:5rem 1.5rem;max-width:860px;margin:0 auto;}
-.details-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1.8rem;margin-top:2rem;}
-.d-card{background:#fff;border:1px solid var(--gold-p);border-top:3px solid var(--gold);padding:2rem 1.5rem;text-align:center;transition:transform 0.3s,box-shadow 0.3s;position:relative;}
-.d-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent);opacity:0.4;}
-.d-card:hover{transform:translateY(-5px);box-shadow:0 14px 40px rgba(107,26,42,0.1);}
-.d-icon{width:46px;height:46px;margin:0 auto 1rem;}
-.d-label{font-size:0.62rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--bx-l);margin-bottom:0.4rem;font-weight:500;}
-.d-val{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--bx);font-weight:600;line-height:1.3;}
-.d-sub{font-size:0.8rem;color:#888;margin-top:0.3rem;}
-.map-btn{display:inline-flex;align-items:center;gap:0.4rem;margin-top:0.8rem;padding:0.45rem 1rem;border:1px solid var(--gold-p);border-bottom:2px solid var(--gold);background:transparent;font-family:'Raleway',sans-serif;font-size:0.75rem;letter-spacing:0.1em;color:var(--bx);text-decoration:none;transition:background 0.25s,color 0.25s;}
-.map-btn:hover{background:var(--bx);color:var(--gold-p);}
+/* ══ INVITATION ══ */
+.invite-wrap{background:var(--white);padding:4rem 1.5rem;text-align:center;position:relative;overflow:hidden;}
+.invite-wrap::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 20% 50%,rgba(212,197,226,0.1) 0%,transparent 55%),
+             radial-gradient(ellipse at 80% 50%,rgba(194,209,180,0.08) 0%,transparent 55%);
+}
+.i-inner{position:relative;max-width:440px;margin:0 auto;}
+.i-frame{border:1px solid rgba(196,150,90,0.3);padding:2.4rem 2rem;position:relative;}
+.i-frame::before{content:'';position:absolute;inset:7px;border:1px solid rgba(196,150,90,0.14);}
+.icd{position:absolute;width:10px;height:10px;background:var(--gold);transform:rotate(45deg);}
+.icd.tl{top:-5px;left:-5px;}.icd.tr{top:-5px;right:-5px;}
+.icd.bl{bottom:-5px;left:-5px;}.icd.br{bottom:-5px;right:-5px;}
+.icd.tm{top:-5px;left:50%;margin-left:-5px;}
+.icd.bm{bottom:-5px;left:50%;margin-left:-5px;}
+.i-upper{
+  font-family:'Raleway',sans-serif;
+  font-size:clamp(0.68rem,2.2vw,0.82rem);
+  font-weight:500;letter-spacing:0.18em;line-height:2;
+  color:var(--text);text-transform:uppercase;margin-bottom:1.5rem;
+}
+.i-mid{
+  font-family:'Raleway',sans-serif;font-size:clamp(0.66rem,2vw,0.78rem);
+  letter-spacing:0.3em;text-transform:uppercase;color:var(--sage-d);margin-bottom:0.5rem;
+}
+.i-names{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-weight:600;
+  font-size:clamp(1.6rem,5.5vw,2.8rem);
+  color:#7A6D90;line-height:1.35;
+  margin:0.3rem 0 1.4rem;
+  text-shadow:0 1px 8px rgba(180,160,210,0.15);
+}
+.i-lower{
+  font-family:'Raleway',sans-serif;
+  font-size:clamp(0.66rem,2vw,0.78rem);
+  letter-spacing:0.18em;line-height:2.1;
+  color:var(--text);text-transform:uppercase;
+}
 
-/* ── COUNTDOWN ── */
-.cd-wrap{background:linear-gradient(135deg,var(--bx-dark) 0%,#2A0A14 100%);padding:5rem 2rem;text-align:center;position:relative;overflow:hidden;}
-/* side ornament stripes */
-.cd-wrap::before,.cd-wrap::after{content:'';position:absolute;top:0;bottom:0;width:60px;opacity:0.06;background-image:repeating-linear-gradient(0deg,var(--gold) 0,var(--gold) 2px,transparent 2px,transparent 14px);}
-.cd-wrap::before{left:0;}
-.cd-wrap::after{right:0;}
-.cd-track{display:flex;justify-content:center;align-items:flex-start;gap:clamp(0.8rem,3vw,2.5rem);flex-wrap:wrap;margin-top:2.5rem;}
-.cd-item{display:flex;flex-direction:column;align-items:center;gap:0.6rem;}
-.cd-box{width:clamp(68px,15vw,96px);height:clamp(68px,15vw,96px);border:1px solid rgba(201,163,88,0.35);border-top:2px solid var(--gold);display:flex;align-items:center;justify-content:center;position:relative;background:rgba(255,255,255,0.03);}
-.cd-box::before{content:'';position:absolute;inset:4px;border:1px solid rgba(201,163,88,0.12);}
-/* small diamond corners */
-.cd-box::after{content:'';position:absolute;top:-5px;left:50%;transform:translateX(-50%) rotate(45deg);width:8px;height:8px;background:var(--gold);opacity:0.6;}
-.cd-num{font-family:'Cinzel Decorative',serif;font-size:clamp(1.4rem,4vw,2.4rem);color:var(--gold-l);line-height:1;}
-.cd-lbl{font-size:0.58rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold-p);opacity:0.65;}
-.cd-sep{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--gold);opacity:0.35;padding-top:0.8rem;}
+/* ══ DETAILS ══ */
+.det-sec{padding:4.5rem 1.5rem;max-width:840px;margin:0 auto;}
+.det-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.6rem;margin-top:1.8rem;}
+.d-card{
+  background:var(--white);
+  border:1px solid rgba(194,209,180,0.5);
+  border-top:2px solid var(--sage);
+  padding:1.8rem 1.4rem;text-align:center;
+  transition:transform 0.3s,box-shadow 0.3s;position:relative;
+}
+.d-card::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);opacity:0.25;}
+.d-card:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(180,160,210,0.12);}
+.d-icon{width:42px;height:42px;margin:0 auto 0.9rem;}
+.d-lbl{font-size:0.59rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--sage-d);margin-bottom:0.3rem;font-weight:500;}
+.d-val{font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:#7A6D90;font-weight:600;line-height:1.3;}
+.d-sub{font-size:0.77rem;color:var(--text-s);margin-top:0.25rem;}
+.map-btn{
+  display:inline-flex;align-items:center;gap:0.35rem;margin-top:0.7rem;
+  padding:0.38rem 0.9rem;border:1px solid rgba(194,209,180,0.5);
+  border-bottom:1.5px solid var(--sage);background:transparent;
+  font-family:'Raleway',sans-serif;font-size:0.71rem;letter-spacing:0.1em;
+  color:var(--sage-d);text-decoration:none;transition:background 0.25s,color 0.25s;
+}
+.map-btn:hover{background:var(--sage);color:var(--text);}
 
-/* ── RSVP ── */
-.rsvp-wrap{background:var(--cream-d);padding:5rem 2rem;position:relative;}
-/* subtle repeating ornament bg */
-.rsvp-wrap::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,var(--gold) 1px,transparent 1px);background-size:40px 40px;opacity:0.04;pointer-events:none;}
-.rsvp-inner{max-width:520px;margin:0 auto;position:relative;}
-.rsvp-form{display:flex;flex-direction:column;gap:1.2rem;margin-top:2rem;}
-.f-group{display:flex;flex-direction:column;gap:0.4rem;}
-.f-label{font-size:0.62rem;letter-spacing:0.32em;text-transform:uppercase;color:var(--bx-l);font-weight:500;}
-.f-input{background:#fff;border:1px solid var(--gold-p);border-bottom:2px solid var(--gold);padding:0.85rem 1rem;font-family:'Raleway',sans-serif;font-size:0.95rem;color:var(--text);outline:none;transition:border-color 0.3s,box-shadow 0.3s;}
-.f-input:focus{border-color:var(--bx);box-shadow:0 2px 14px rgba(107,26,42,0.1);}
-.radio-group{display:flex;gap:1rem;flex-wrap:wrap;}
-.radio-label{flex:1;min-width:130px;cursor:pointer;}
-.radio-label input{display:none;}
-.radio-box{display:block;border:1px solid var(--gold-p);border-bottom:2px solid var(--gold);padding:0.75rem 1rem;text-align:center;font-size:0.88rem;color:var(--text);background:#fff;transition:background 0.25s,color 0.25s;}
-.radio-label input:checked + .radio-box{background:var(--bx);color:var(--gold-p);border-color:var(--bx);}
-.rsvp-btn{background:var(--bx);color:var(--gold-p);border:none;padding:1rem 2.5rem;font-family:'Cinzel Decorative',serif;font-size:0.82rem;letter-spacing:0.18em;cursor:pointer;align-self:center;margin-top:0.5rem;position:relative;transition:background 0.3s,transform 0.2s,box-shadow 0.3s;}
-.rsvp-btn::before{content:'';position:absolute;inset:2px;border:1px solid rgba(201,163,88,0.3);pointer-events:none;}
-.rsvp-btn:hover{background:var(--bx-l);transform:translateY(-2px);box-shadow:0 8px 24px rgba(107,26,42,0.3);}
-.rsvp-ok{display:none;text-align:center;padding:2.5rem 2rem;background:#fff;border:1px solid var(--gold-p);border-top:3px solid var(--gold);}
+/* ══ ТОЙ ИЕСІ ══ */
+.iesi-wrap{background:var(--bg-3);padding:3.5rem 2rem;text-align:center;position:relative;overflow:hidden;}
+.iesi-wrap::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(180,160,210,0.1) 1px,transparent 1px);
+  background-size:36px 36px;pointer-events:none;
+}
+
+/* ══ COUNTDOWN ══ */
+.cd-wrap{
+  background:linear-gradient(150deg,#E6EEE0 0%,#EDE7F6 100%);
+  padding:4.5rem 2rem;text-align:center;position:relative;overflow:hidden;
+}
+.cd-wrap::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,rgba(180,160,210,0.05) 0,rgba(180,160,210,0.05) 1px,transparent 1px,transparent 48px),
+             repeating-linear-gradient(90deg,rgba(160,185,148,0.05) 0,rgba(160,185,148,0.05) 1px,transparent 1px,transparent 48px);
+}
+.cd-track{display:flex;justify-content:center;align-items:flex-start;gap:clamp(0.7rem,3vw,2rem);flex-wrap:wrap;margin-top:2.2rem;}
+.cd-item{display:flex;flex-direction:column;align-items:center;gap:0.5rem;}
+.cd-box{
+  width:clamp(66px,15vw,88px);height:clamp(66px,15vw,88px);
+  border:1px solid rgba(180,160,210,0.3);
+  border-top:2px solid var(--rose-d);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;background:rgba(255,255,255,0.55);
+}
+.cd-box::before{content:'';position:absolute;inset:4px;border:1px solid rgba(180,160,210,0.12);}
+.cd-box::after{content:'';position:absolute;top:-5px;left:50%;transform:translateX(-50%) rotate(45deg);width:8px;height:8px;background:var(--rose-d);}
+.cd-num{font-family:'Cinzel',serif;font-size:clamp(1.3rem,3.5vw,2.1rem);color:#7A6D90;line-height:1;}
+.cd-lbl{font-size:0.54rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--text-s);}
+.cd-sep{font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--rose-d);opacity:0.5;padding-top:0.7rem;}
+
+/* ══ RSVP ══ */
+.rsvp-wrap{background:var(--bg-2);padding:4.5rem 2rem;position:relative;}
+.rsvp-wrap::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(194,209,180,0.15) 1px,transparent 1px);background-size:38px 38px;pointer-events:none;}
+.rsvp-in{max-width:490px;margin:0 auto;position:relative;}
+.rsvp-form{display:flex;flex-direction:column;gap:1.1rem;margin-top:1.8rem;}
+.f-g{display:flex;flex-direction:column;gap:0.35rem;}
+.f-lbl{font-size:0.59rem;letter-spacing:0.32em;text-transform:uppercase;color:var(--sage-d);font-weight:500;}
+.f-in{
+  background:var(--white);border:1px solid rgba(194,209,180,0.4);
+  border-bottom:1.5px solid var(--sage);padding:0.8rem 1rem;
+  font-family:'Raleway',sans-serif;font-size:0.92rem;color:var(--text);outline:none;
+  transition:border-color 0.3s,box-shadow 0.3s;
+}
+.f-in:focus{border-color:var(--rose-d);box-shadow:0 2px 10px rgba(180,160,210,0.15);}
+.rg{display:flex;gap:0.9rem;flex-wrap:wrap;}
+.rl{flex:1;min-width:118px;cursor:pointer;}
+.rl input{display:none;}
+.rb{
+  display:block;border:1px solid rgba(194,209,180,0.4);border-bottom:1.5px solid var(--sage);
+  padding:0.7rem 0.9rem;text-align:center;font-size:0.85rem;
+  color:var(--text);background:var(--white);transition:background 0.25s,color 0.25s;
+}
+.rl input:checked + .rb{background:var(--rose);color:#5A4E70;border-color:var(--rose-d);}
+.rsvp-btn{
+  background:var(--rose);color:#5A4E70;border:none;padding:0.92rem 2.4rem;
+  font-family:'Cinzel',serif;font-size:0.78rem;letter-spacing:0.2em;
+  cursor:pointer;align-self:center;margin-top:0.4rem;position:relative;
+  transition:background 0.3s,transform 0.2s,box-shadow 0.3s;
+}
+.rsvp-btn::before{content:'';position:absolute;inset:2px;border:1px solid rgba(180,160,210,0.3);pointer-events:none;}
+.rsvp-btn:hover{background:var(--rose-d);transform:translateY(-2px);box-shadow:0 6px 18px rgba(180,160,210,0.3);}
+.rsvp-ok{display:none;text-align:center;padding:2.2rem 1.5rem;background:var(--white);border:1px solid rgba(194,209,180,0.4);border-top:2px solid var(--sage);}
 .rsvp-ok.show{display:block;}
-.rsvp-ok p{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--bx);font-style:italic;margin-top:0.8rem;line-height:1.7;}
+.rsvp-ok p{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#7A6D90;font-style:italic;margin-top:0.7rem;line-height:1.7;}
 
-/* ── FOOTER ── */
-.footer{background:var(--bx-dark);text-align:center;padding:4rem 2rem;position:relative;overflow:hidden;}
-.footer::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,var(--gold) 0,var(--gold) 1px,transparent 0,transparent 50%),repeating-linear-gradient(-45deg,var(--gold) 0,var(--gold) 1px,transparent 0,transparent 50%);background-size:32px 32px;opacity:0.03;}
-.footer-names{font-family:'Cinzel Decorative',serif;font-size:1.3rem;color:var(--gold);margin-bottom:0.6rem;position:relative;}
-.footer-text{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--cream-d);opacity:0.55;letter-spacing:0.12em;font-style:italic;position:relative;}
+/* ══ FOOTER ══ */
+.footer{
+  background:linear-gradient(150deg,#EDE7F6 0%,#E6EEE0 100%);
+  text-align:center;padding:3.5rem 2rem;position:relative;overflow:hidden;
+}
+.footer::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(45deg,rgba(180,160,210,0.04) 0,rgba(180,160,210,0.04) 1px,transparent 1px,transparent 30px);
+}
+.f-names{font-family:'Marck Script',cursive;font-size:1.9rem;color:#7A6D90;margin-bottom:0.5rem;position:relative;text-shadow:0 1px 8px rgba(180,160,210,0.2);}
+.f-text{font-family:'Cormorant Garamond',serif;font-size:0.95rem;color:var(--text-s);letter-spacing:0.14em;font-style:italic;position:relative;}
 
-/* ══════════ MOBILE ══════════ */
+/* ══ MOBILE ══ */
 @media(max-width:600px){
-  .ov-corner{width:55px;height:55px;}
-  .ov-shanyraq svg{width:72px;height:72px;}
-  .ov-sub{font-size:0.85rem;letter-spacing:0.1em;}
-  .enter-btn{padding:0.8rem 2rem;font-size:0.75rem;}
-
-  .hero-corner{width:46px!important;height:46px!important;}
+  .oc{width:48px;height:48px;}
+  .ov-sh svg{width:66px;height:66px;}
+  .hc{width:42px!important;height:42px!important;}
   .hero-c{padding:1.2rem;}
-  .hero-sh svg{width:66px;height:66px;}
-  .hero-sub{font-size:1rem;margin-top:1.2rem;}
-  .hero-date{font-size:0.78rem;letter-spacing:0.18em;}
-  .scroll-hint{font-size:0.55rem;}
-
-  .poem-wrap{padding:2.8rem 1.2rem;}
-  .poem-motif{width:50px!important;height:50px!important;}
-  .q-mark{font-size:3.5rem;}
-  .poem-text{line-height:1.9;}
-
-  .toy-iesi-wrap{padding:2.2rem 1rem!important;}
-  .toy-iesi-card{padding:1.5rem 1rem!important;}
-  .toy-iesi-name{font-size:clamp(1.5rem,8vw,2.2rem)!important;}
-  .toy-iesi-sh svg{width:36px!important;height:36px!important;}
-  .toy-iesi-ornrow{display:none!important;}
-
-  .details-section{padding:2.8rem 1rem;}
-  .details-grid{grid-template-columns:1fr;gap:1rem;}
-  .d-card{padding:1.3rem 1rem;}
-  .d-icon{width:36px;height:36px;}
-
-  .cd-wrap{padding:2.8rem 1rem;}
+  .hero-sh svg{width:60px;height:60px;}
+  .poem-wrap{padding:2.8rem 1rem;}
+  .poem-motif{width:44px!important;height:44px!important;}
+  .invite-wrap{padding:2.4rem 0.9rem;}
+  .i-frame{padding:1.6rem 0.9rem;}
+  .i-names{font-size:clamp(1.3rem,6.5vw,1.9rem);}
+  .i-upper,.i-lower{letter-spacing:0.1em;line-height:1.85;}
+  .det-sec{padding:2.6rem 0.9rem;}
+  .det-grid{grid-template-columns:1fr;gap:0.9rem;}
+  .d-card{padding:1.2rem 0.9rem;}
+  .iesi-wrap{padding:2.2rem 0.9rem!important;}
+  .iesi-card{padding:1.4rem 0.9rem!important;}
+  .iesi-name{font-size:clamp(2rem,9vw,3rem)!important;}
+  .iesi-sh{width:32px!important;height:32px!important;}
+  .iesi-ornrow{display:none!important;}
+  .cd-wrap{padding:2.6rem 0.9rem;}
   .cd-sep{display:none;}
-  .cd-box{width:66px!important;height:66px!important;}
-  .cd-num{font-size:1.45rem!important;}
-  .cd-track{gap:0.5rem;}
-
-  .rsvp-wrap{padding:2.8rem 1rem;}
-  .radio-label{min-width:0;flex:1;}
-  .rsvp-btn{font-size:0.75rem;padding:0.9rem 1.5rem;width:100%;}
-  .rsvp-ok{padding:1.6rem 1rem;}
-  .rsvp-ok p{font-size:1.05rem;}
-
-  .kz-band{height:16px!important;}
-  .s-title{font-size:1.1rem;}
-  .kzd .ln{width:45px;}
-
-  .footer{padding:2.5rem 1rem;}
-  .footer-names{font-size:1.05rem;}
-
-  #mb{width:44px;height:44px;bottom:1.2rem;right:1.2rem;}
+  .cd-box{width:62px!important;height:62px!important;}
+  .cd-track{gap:0.4rem;}
+  .rsvp-wrap{padding:2.6rem 0.9rem;}
+  .rl{min-width:0;flex:1;}
+  .rsvp-btn{width:100%;}
+  .kz-band{height:14px!important;}
+  .footer{padding:2rem 0.9rem;}
+  #mb{width:40px;height:40px;bottom:1rem;right:1rem;}
 }
 </style>
 </head>
 <body>
 
-<!-- AUDIO (see music/song.mp3) -->
 <audio id="bg-music" loop preload="auto">
   <source src="music/song.mp3" type="audio/mpeg">
 </audio>
 
 <!-- ══ ENTRANCE ══ -->
 <div id="ov">
-  <div class="ov-bg"></div>
-
-  <!-- Corner Kazakh motifs on entrance -->
-  <svg class="ov-corner tl" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0 0 L90 0 L90 10 Q50 10 40 20 Q30 30 10 90 L0 90 Z" fill="#C9A358"/>
-    <path d="M10 0 L90 0 L90 20 Q60 18 48 32 Q36 46 20 90 L10 90 Z" fill="none" stroke="#C9A358" stroke-width="1" opacity="0.5"/>
-    <circle cx="10" cy="10" r="4" fill="#C9A358"/>
-    <circle cx="80" cy="80" r="3" fill="#C9A358" opacity="0.5"/>
-    <path d="M25 0 Q25 25 0 25" stroke="#C9A358" stroke-width="1" fill="none" opacity="0.6"/>
-    <path d="M45 0 Q45 45 0 45" stroke="#C9A358" stroke-width="0.8" fill="none" opacity="0.4"/>
+  <!-- corners -->
+  <svg class="oc tl" width="80" height="80" viewBox="0 0 80 80" fill="none">
+    <path d="M0 0 Q0 80 80 80" stroke="#BFB0D0" stroke-width="1.2" fill="none"/>
+    <path d="M0 0 Q0 52 52 52" stroke="#BFB0D0" stroke-width="0.8" fill="none" opacity="0.6"/>
+    <path d="M0 0 Q0 26 26 26" stroke="#BFB0D0" stroke-width="0.6" fill="none" opacity="0.4"/>
+    <circle cx="4" cy="4" r="2.5" fill="#BFB0D0"/>
+    <polygon points="13,0 16,4 13,8 10,4" fill="#BFB0D0" opacity="0.7"/>
+    <polygon points="0,13 4,16 8,13 4,10" fill="#BFB0D0" opacity="0.7"/>
   </svg>
-  <svg class="ov-corner tr" viewBox="0 0 90 90" fill="none">
-    <path d="M0 0 L90 0 L90 90 L80 90 Q60 30 48 20 Q36 10 0 10 Z" fill="#C9A358"/>
-    <path d="M25 0 Q25 25 0 25" stroke="#C9A358" stroke-width="1" fill="none" opacity="0.6"/>
-    <circle cx="10" cy="10" r="4" fill="#C9A358"/>
+  <svg class="oc tr" width="80" height="80" viewBox="0 0 80 80" fill="none">
+    <path d="M0 0 Q0 80 80 80" stroke="#BFB0D0" stroke-width="1.2" fill="none"/>
+    <path d="M0 0 Q0 52 52 52" stroke="#BFB0D0" stroke-width="0.8" fill="none" opacity="0.6"/>
+    <circle cx="4" cy="4" r="2.5" fill="#BFB0D0"/>
+    <polygon points="13,0 16,4 13,8 10,4" fill="#BFB0D0" opacity="0.7"/>
   </svg>
-  <svg class="ov-corner bl" viewBox="0 0 90 90" fill="none">
-    <path d="M0 0 L90 0 L90 90 L80 90 Q60 30 48 20 Q36 10 0 10 Z" fill="#C9A358"/>
-    <circle cx="10" cy="10" r="4" fill="#C9A358"/>
-    <path d="M25 0 Q25 25 0 25" stroke="#C9A358" stroke-width="1" fill="none" opacity="0.6"/>
+  <svg class="oc bl" width="80" height="80" viewBox="0 0 80 80" fill="none">
+    <path d="M0 0 Q0 80 80 80" stroke="#BFB0D0" stroke-width="1.2" fill="none"/>
+    <circle cx="4" cy="4" r="2.5" fill="#BFB0D0"/>
   </svg>
-  <svg class="ov-corner br" viewBox="0 0 90 90" fill="none">
-    <path d="M0 0 L90 0 L90 90 L80 90 Q60 30 48 20 Q36 10 0 10 Z" fill="#C9A358"/>
-    <circle cx="10" cy="10" r="4" fill="#C9A358"/>
+  <svg class="oc br" width="80" height="80" viewBox="0 0 80 80" fill="none">
+    <path d="M0 0 Q0 80 80 80" stroke="#BFB0D0" stroke-width="1.2" fill="none"/>
+    <circle cx="4" cy="4" r="2.5" fill="#BFB0D0"/>
   </svg>
 
-  <div class="ov-shanyraq">
-    <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
-      <circle cx="50" cy="50" r="47" stroke="#C9A358" stroke-width="1" stroke-dasharray="5 3" opacity="0.5"/>
-      <circle cx="50" cy="50" r="32" stroke="#C9A358" stroke-width="1.5"/>
-      <circle cx="50" cy="50" r="8" fill="#C9A358" opacity="0.55"/>
-      <line x1="50" y1="42" x2="50" y2="18" stroke="#C9A358" stroke-width="1.5"/>
-      <line x1="50" y1="58" x2="50" y2="82" stroke="#C9A358" stroke-width="1.5"/>
-      <line x1="42" y1="50" x2="18" y2="50" stroke="#C9A358" stroke-width="1.5"/>
-      <line x1="58" y1="50" x2="82" y2="50" stroke="#C9A358" stroke-width="1.5"/>
-      <line x1="44.3" y1="44.3" x2="27.2" y2="27.2" stroke="#C9A358" stroke-width="1.2"/>
-      <line x1="55.7" y1="55.7" x2="72.8" y2="72.8" stroke="#C9A358" stroke-width="1.2"/>
-      <line x1="55.7" y1="44.3" x2="72.8" y2="27.2" stroke="#C9A358" stroke-width="1.2"/>
-      <line x1="44.3" y1="55.7" x2="27.2" y2="72.8" stroke="#C9A358" stroke-width="1.2"/>
-      <polygon points="50,12 52.5,17 50,22 47.5,17" fill="#C9A358" opacity="0.85"/>
-      <polygon points="50,78 52.5,83 50,88 47.5,83" fill="#C9A358" opacity="0.85"/>
-      <polygon points="12,50 17,52.5 22,50 17,47.5" fill="#C9A358" opacity="0.85"/>
-      <polygon points="78,50 83,52.5 88,50 83,47.5" fill="#C9A358" opacity="0.85"/>
+  <div class="ov-sh">
+    <svg width="92" height="92" viewBox="0 0 100 100" fill="none">
+      <circle cx="50" cy="50" r="46" stroke="#BFB0D0" stroke-width="1" stroke-dasharray="5 3" opacity="0.7"/>
+      <circle cx="50" cy="50" r="30" stroke="#BFB0D0" stroke-width="1.3" opacity="0.8"/>
+      <circle cx="50" cy="50" r="7" fill="#BFB0D0" opacity="0.6"/>
+      <line x1="50" y1="43" x2="50" y2="20" stroke="#BFB0D0" stroke-width="1.4" opacity="0.75"/>
+      <line x1="50" y1="57" x2="50" y2="80" stroke="#BFB0D0" stroke-width="1.4" opacity="0.75"/>
+      <line x1="43" y1="50" x2="20" y2="50" stroke="#BFB0D0" stroke-width="1.4" opacity="0.75"/>
+      <line x1="57" y1="50" x2="80" y2="50" stroke="#BFB0D0" stroke-width="1.4" opacity="0.75"/>
+      <line x1="45" y1="45" x2="29" y2="29" stroke="#BFB0D0" stroke-width="1.1" opacity="0.5"/>
+      <line x1="55" y1="55" x2="71" y2="71" stroke="#BFB0D0" stroke-width="1.1" opacity="0.5"/>
+      <line x1="55" y1="45" x2="71" y2="29" stroke="#BFB0D0" stroke-width="1.1" opacity="0.5"/>
+      <line x1="45" y1="55" x2="29" y2="71" stroke="#BFB0D0" stroke-width="1.1" opacity="0.5"/>
+      <polygon points="50,14 52.5,19 50,24 47.5,19" fill="#BFB0D0" opacity="0.8"/>
+      <polygon points="50,76 52.5,81 50,86 47.5,81" fill="#BFB0D0" opacity="0.8"/>
+      <polygon points="14,50 19,52.5 24,50 19,47.5" fill="#BFB0D0" opacity="0.8"/>
+      <polygon points="76,50 81,52.5 86,50 81,47.5" fill="#BFB0D0" opacity="0.8"/>
     </svg>
   </div>
 
-  <div class="ov-names">Аспандияр<span class="amp">✦ &nbsp;&amp;&nbsp; ✦</span>Жұлдыз</div>
+  <div class="ov-names">Аспандияр<span class="amp">✦ &amp; ✦</span>Жұлдыз</div>
   <p class="ov-sub">Тойға шақыру &nbsp;·&nbsp; 31 Шілде 2026</p>
-  <button class="enter-btn" onclick="enterSite()">✦ &nbsp;Бастау&nbsp; ✦</button>
+  <button class="ov-btn" onclick="enterSite()">✦ &nbsp;Бастау&nbsp; ✦</button>
 </div>
 
-<!-- ══ MUSIC ══ -->
+<!-- MUSIC -->
 <button id="mb" onclick="toggleMusic()" title="Музыка">
   <svg id="icon-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><polygon points="5,3 19,12 5,21"/></svg>
   <svg id="icon-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
 </button>
 
 <!-- ══ HERO ══ -->
-<div class="hero" id="hero-section">
-  <div class="hero-bg"></div>
-  <!-- corner ornaments -->
-  <svg class="hero-corner tl" width="80" height="80" viewBox="0 0 80 80" fill="none">
-    <path d="M0 0 Q0 80 80 80" stroke="#C9A358" stroke-width="1" fill="none"/>
-    <path d="M0 0 Q0 55 55 55" stroke="#C9A358" stroke-width="0.8" fill="none" opacity="0.6"/>
-    <path d="M0 0 Q0 30 30 30" stroke="#C9A358" stroke-width="0.6" fill="none" opacity="0.4"/>
-    <circle cx="4" cy="4" r="3" fill="#C9A358" opacity="0.7"/>
-    <polygon points="15,0 18,5 15,10 12,5" fill="#C9A358" opacity="0.5"/>
-    <polygon points="0,15 5,18 10,15 5,12" fill="#C9A358" opacity="0.5"/>
-  </svg>
-  <svg class="hero-corner tr" width="80" height="80" viewBox="0 0 80 80" fill="none">
-    <path d="M0 0 Q0 80 80 80" stroke="#C9A358" stroke-width="1" fill="none"/>
-    <path d="M0 0 Q0 55 55 55" stroke="#C9A358" stroke-width="0.8" fill="none" opacity="0.6"/>
-    <circle cx="4" cy="4" r="3" fill="#C9A358" opacity="0.7"/>
-    <polygon points="15,0 18,5 15,10 12,5" fill="#C9A358" opacity="0.5"/>
-  </svg>
-  <svg class="hero-corner bl" width="80" height="80" viewBox="0 0 80 80" fill="none">
-    <path d="M0 0 Q0 80 80 80" stroke="#C9A358" stroke-width="1" fill="none"/>
-    <circle cx="4" cy="4" r="3" fill="#C9A358" opacity="0.7"/>
-    <polygon points="15,0 18,5 15,10 12,5" fill="#C9A358" opacity="0.5"/>
-  </svg>
-  <svg class="hero-corner br" width="80" height="80" viewBox="0 0 80 80" fill="none">
-    <path d="M0 0 Q0 80 80 80" stroke="#C9A358" stroke-width="1" fill="none"/>
-    <circle cx="4" cy="4" r="3" fill="#C9A358" opacity="0.7"/>
-  </svg>
+<div class="hero">
   <div class="hr"></div><div class="hr"></div><div class="hr"></div>
+  <svg class="hc tl" width="72" height="72" viewBox="0 0 80 80" fill="none">
+    <path d="M0 0 Q0 80 80 80" stroke="#BFB0D0" stroke-width="1" fill="none"/>
+    <path d="M0 0 Q0 50 50 50" stroke="#BFB0D0" stroke-width="0.7" fill="none" opacity="0.6"/>
+    <circle cx="4" cy="4" r="2.2" fill="#BFB0D0" opacity="0.8"/>
+    <polygon points="12,0 15,4 12,8 9,4" fill="#BFB0D0" opacity="0.6"/>
+    <polygon points="0,12 4,15 8,12 4,9" fill="#BFB0D0" opacity="0.6"/>
+  </svg>
+  <svg class="hc tr" width="72" height="72" viewBox="0 0 80 80" fill="none">
+    <path d="M0 0 Q0 80 80 80" stroke="#BFB0D0" stroke-width="1" fill="none"/>
+    <path d="M0 0 Q0 50 50 50" stroke="#BFB0D0" stroke-width="0.7" fill="none" opacity="0.6"/>
+    <circle cx="4" cy="4" r="2.2" fill="#BFB0D0" opacity="0.8"/>
+  </svg>
+  <svg class="hc bl" width="72" height="72" viewBox="0 0 80 80" fill="none">
+    <path d="M0 0 Q0 80 80 80" stroke="#BFB0D0" stroke-width="1" fill="none"/>
+    <circle cx="4" cy="4" r="2.2" fill="#BFB0D0" opacity="0.8"/>
+  </svg>
+  <svg class="hc br" width="72" height="72" viewBox="0 0 80 80" fill="none">
+    <path d="M0 0 Q0 80 80 80" stroke="#BFB0D0" stroke-width="1" fill="none"/>
+    <circle cx="4" cy="4" r="2.2" fill="#BFB0D0" opacity="0.8"/>
+  </svg>
+
   <div class="hero-c">
     <p class="hero-tag">Тойға шақыру</p>
     <div class="hero-sh">
-      <svg width="88" height="88" viewBox="0 0 90 90" fill="none">
-        <circle cx="45" cy="45" r="42" stroke="#C9A358" stroke-width="1" stroke-dasharray="4 3"/>
-        <circle cx="45" cy="45" r="29" stroke="#C9A358" stroke-width="1.5"/>
-        <circle cx="45" cy="45" r="7" fill="#C9A358" opacity="0.6"/>
-        <line x1="45" y1="38" x2="45" y2="16" stroke="#C9A358" stroke-width="1.5"/>
-        <line x1="45" y1="52" x2="45" y2="74" stroke="#C9A358" stroke-width="1.5"/>
-        <line x1="38" y1="45" x2="16" y2="45" stroke="#C9A358" stroke-width="1.5"/>
-        <line x1="52" y1="45" x2="74" y2="45" stroke="#C9A358" stroke-width="1.5"/>
-        <line x1="39.9" y1="39.9" x2="24.4" y2="24.4" stroke="#C9A358" stroke-width="1.2"/>
-        <line x1="50.1" y1="50.1" x2="65.6" y2="65.6" stroke="#C9A358" stroke-width="1.2"/>
-        <line x1="50.1" y1="39.9" x2="65.6" y2="24.4" stroke="#C9A358" stroke-width="1.2"/>
-        <line x1="39.9" y1="50.1" x2="24.4" y2="65.6" stroke="#C9A358" stroke-width="1.2"/>
-        <polygon points="45,10 47.5,15 45,20 42.5,15" fill="#C9A358" opacity="0.8"/>
-        <polygon points="45,70 47.5,75 45,80 42.5,75" fill="#C9A358" opacity="0.8"/>
-        <polygon points="10,45 15,47.5 20,45 15,42.5" fill="#C9A358" opacity="0.8"/>
-        <polygon points="70,45 75,47.5 80,45 75,42.5" fill="#C9A358" opacity="0.8"/>
+      <svg width="82" height="82" viewBox="0 0 90 90" fill="none">
+        <circle cx="45" cy="45" r="41" stroke="#BFB0D0" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>
+        <circle cx="45" cy="45" r="27" stroke="#BFB0D0" stroke-width="1.4" opacity="0.8"/>
+        <circle cx="45" cy="45" r="6" fill="#BFB0D0" opacity="0.6"/>
+        <line x1="45" y1="39" x2="45" y2="18" stroke="#BFB0D0" stroke-width="1.4" opacity="0.7"/>
+        <line x1="45" y1="51" x2="45" y2="72" stroke="#BFB0D0" stroke-width="1.4" opacity="0.7"/>
+        <line x1="39" y1="45" x2="18" y2="45" stroke="#BFB0D0" stroke-width="1.4" opacity="0.7"/>
+        <line x1="51" y1="45" x2="72" y2="45" stroke="#BFB0D0" stroke-width="1.4" opacity="0.7"/>
+        <line x1="40.5" y1="40.5" x2="26" y2="26" stroke="#BFB0D0" stroke-width="1.1" opacity="0.45"/>
+        <line x1="49.5" y1="49.5" x2="64" y2="64" stroke="#BFB0D0" stroke-width="1.1" opacity="0.45"/>
+        <line x1="49.5" y1="40.5" x2="64" y2="26" stroke="#BFB0D0" stroke-width="1.1" opacity="0.45"/>
+        <line x1="40.5" y1="49.5" x2="26" y2="64" stroke="#BFB0D0" stroke-width="1.1" opacity="0.45"/>
+        <polygon points="45,12 47.5,17 45,22 42.5,17" fill="#BFB0D0" opacity="0.75"/>
+        <polygon points="45,68 47.5,73 45,78 42.5,73" fill="#BFB0D0" opacity="0.75"/>
+        <polygon points="12,45 17,47.5 22,45 17,42.5" fill="#BFB0D0" opacity="0.75"/>
+        <polygon points="68,45 73,47.5 78,45 73,42.5" fill="#BFB0D0" opacity="0.75"/>
       </svg>
     </div>
-    <div class="hero-names">Аспандияр<span class="amp">✦ &nbsp;&amp;&nbsp; ✦</span>Жұлдыз</div>
+    <div class="hero-names">Аспандияр<span class="amp">✦ &amp; ✦</span>Жұлдыз</div>
     <p class="hero-sub">Сіздерді тойымызға шақырамыз</p>
     <p class="hero-date">31 · ШІЛДЕ · 2026</p>
   </div>
   <div class="scroll-hint">Төмен жылжыңыз</div>
 </div>
 
-<!-- ══ ORNAMENT BAND 1: толқын (wave) ══ -->
-<svg class="kz-band" height="36" viewBox="0 0 1200 36" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1200" height="36" fill="#3A0B14"/>
-  <path d="M0 18 Q50 4 100 18 Q150 32 200 18 Q250 4 300 18 Q350 32 400 18 Q450 4 500 18 Q550 32 600 18 Q650 4 700 18 Q750 32 800 18 Q850 4 900 18 Q950 32 1000 18 Q1050 4 1100 18 Q1150 32 1200 18" stroke="#C9A358" stroke-width="1.5" fill="none" opacity="0.55"/>
-  <path d="M0 22 Q50 8 100 22 Q150 36 200 22 Q250 8 300 22 Q350 36 400 22 Q450 8 500 22 Q550 36 600 22 Q650 8 700 22 Q750 36 800 22 Q850 8 900 22 Q950 36 1000 22 Q1050 8 1100 22 Q1150 36 1200 22" stroke="#C9A358" stroke-width="0.7" fill="none" opacity="0.3"/>
+<!-- BAND 1 -->
+<svg class="kz-band" height="28" viewBox="0 0 1200 28" preserveAspectRatio="none">
+  <rect width="1200" height="28" fill="#D4C5E2" opacity="0.6"/>
+  <path d="M0 14 Q60 3 120 14 Q180 25 240 14 Q300 3 360 14 Q420 25 480 14 Q540 3 600 14 Q660 25 720 14 Q780 3 840 14 Q900 25 960 14 Q1020 3 1080 14 Q1140 25 1200 14" stroke="rgba(255,255,255,0.7)" stroke-width="1.3" fill="none"/>
+  <path d="M0 18 Q60 7 120 18 Q180 29 240 18 Q300 7 360 18 Q420 29 480 18 Q540 7 600 18 Q660 29 720 18 Q780 7 840 18 Q900 29 960 18 Q1020 7 1080 18 Q1140 29 1200 18" stroke="rgba(255,255,255,0.35)" stroke-width="0.7" fill="none"/>
 </svg>
 
 <!-- ══ POEM ══ -->
 <div class="poem-wrap">
-  <!-- floating motifs -->
-  <svg class="poem-motif tl" width="80" height="80" viewBox="0 0 80 80" fill="none">
-    <path d="M0 80 Q40 40 80 0" stroke="#C9A358" stroke-width="1.5"/>
-    <path d="M0 60 Q30 30 60 0" stroke="#C9A358" stroke-width="1" opacity="0.6"/>
-    <circle cx="5" cy="75" r="4" fill="#C9A358"/>
-    <polygon points="40,0 43,7 40,14 37,7" fill="#C9A358" opacity="0.7"/>
+  <svg class="poem-motif tl" width="70" height="70" viewBox="0 0 80 80" fill="none">
+    <path d="M0 80 Q40 40 80 0" stroke="#BFB0D0" stroke-width="1.4"/>
+    <path d="M0 57 Q28 28 57 0" stroke="#BFB0D0" stroke-width="0.9" opacity="0.5"/>
+    <circle cx="5" cy="75" r="3.5" fill="#BFB0D0" opacity="0.7"/>
+    <polygon points="37,0 40,6 37,12 34,6" fill="#BFB0D0" opacity="0.6"/>
   </svg>
-  <svg class="poem-motif br" width="80" height="80" viewBox="0 0 80 80" fill="none">
-    <path d="M0 80 Q40 40 80 0" stroke="#C9A358" stroke-width="1.5"/>
-    <circle cx="5" cy="75" r="4" fill="#C9A358"/>
-    <polygon points="40,0 43,7 40,14 37,7" fill="#C9A358" opacity="0.7"/>
+  <svg class="poem-motif br" width="70" height="70" viewBox="0 0 80 80" fill="none">
+    <path d="M0 80 Q40 40 80 0" stroke="#BFB0D0" stroke-width="1.4"/>
+    <circle cx="5" cy="75" r="3.5" fill="#BFB0D0" opacity="0.7"/>
   </svg>
-
-  <div class="poem-inner reveal" style="padding:2.5rem 0;">
+  <div class="poem-inner reveal" style="padding:2rem 0;">
     <span class="q-mark">"</span>
     <p class="poem-text">
       Екі жүрек — бір тағдыр,<br>
@@ -373,170 +517,215 @@ body{background:var(--cream);color:var(--text);font-family:'Raleway',sans-serif;
   </div>
 </div>
 
-<!-- ══ ORNAMENT BAND 2: ромб (diamond chain) ══ -->
-<svg class="kz-band" height="28" viewBox="0 0 1200 28" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1200" height="28" fill="#FDF6EC"/>
+<!-- BAND 2 -->
+<svg class="kz-band" height="24" viewBox="0 0 1200 24" preserveAspectRatio="none">
+  <rect width="1200" height="24" fill="#FDFCFA"/>
   <defs>
-    <pattern id="dchain" x="0" y="0" width="40" height="28" patternUnits="userSpaceOnUse">
-      <polygon points="20,4 28,14 20,24 12,14" fill="none" stroke="#C9A358" stroke-width="1.2" opacity="0.55"/>
-      <line x1="0" y1="14" x2="12" y2="14" stroke="#C9A358" stroke-width="1" opacity="0.35"/>
-      <line x1="28" y1="14" x2="40" y2="14" stroke="#C9A358" stroke-width="1" opacity="0.35"/>
-      <circle cx="20" cy="14" r="2" fill="#C9A358" opacity="0.5"/>
+    <pattern id="dch" x="0" y="0" width="38" height="24" patternUnits="userSpaceOnUse">
+      <polygon points="19,3 26,12 19,21 12,12" fill="none" stroke="#C2D1B4" stroke-width="1.2"/>
+      <line x1="0" y1="12" x2="12" y2="12" stroke="#C2D1B4" stroke-width="0.8" opacity="0.6"/>
+      <line x1="26" y1="12" x2="38" y2="12" stroke="#C2D1B4" stroke-width="0.8" opacity="0.6"/>
+      <circle cx="19" cy="12" r="1.6" fill="#C2D1B4" opacity="0.7"/>
     </pattern>
   </defs>
-  <rect width="1200" height="28" fill="url(#dchain)"/>
+  <rect width="1200" height="24" fill="url(#dch)"/>
 </svg>
 
-<!-- ══ DETAILS ══ -->
-<section class="details-section" id="details">
-  <div class="reveal">
-    <p class="s-label">Шара туралы</p>
-    <h2 class="s-title">Той мәліметтері</h2>
-    <div class="kzd">
-      <div class="ln"></div>
-      <svg width="18" height="18" viewBox="0 0 20 20"><polygon points="10,2 12,8 18,8 13,12 15,18 10,14 5,18 7,12 2,8 8,8" fill="#C9A358"/></svg>
-      <div class="ln r"></div>
-    </div>
-  </div>
-  <div class="details-grid reveal">
+<!-- ══ INVITATION ══ -->
+<div class="invite-wrap" id="details">
+  <div class="i-inner reveal">
+    <div class="i-frame">
+      <div class="icd tl"></div><div class="icd tr"></div>
+      <div class="icd bl"></div><div class="icd br"></div>
+      <div class="icd tm"></div><div class="icd bm"></div>
 
-    <div class="d-card">
-      <svg class="d-icon" viewBox="0 0 48 48" fill="none">
-        <rect x="6" y="10" width="36" height="32" rx="2" stroke="#6B1A2A" stroke-width="2"/>
-        <path d="M6 18h36" stroke="#6B1A2A" stroke-width="2"/>
-        <path d="M16 6v8M32 6v8" stroke="#C9A358" stroke-width="2.5" stroke-linecap="round"/>
-        <rect x="14" y="24" width="6" height="6" rx="1" fill="#C9A358"/>
-        <rect x="28" y="24" width="6" height="6" rx="1" fill="#C9A358"/>
-      </svg>
-      <div class="d-label">Күні</div>
-      <div class="d-val">31 Шілде</div>
-      <div class="d-sub">2026 жыл, жұма</div>
-    </div>
-
-    <div class="d-card">
-      <svg class="d-icon" viewBox="0 0 48 48" fill="none">
-        <circle cx="24" cy="24" r="16" stroke="#6B1A2A" stroke-width="2"/>
-        <path d="M24 14v10l7 4" stroke="#C9A358" stroke-width="2.5" stroke-linecap="round"/>
-      </svg>
-      <div class="d-label">Уақыты</div>
-      <div class="d-val">18:00</div>
-      <div class="d-sub">Сағат 18:00-де бастаймыз</div>
-    </div>
-
-    <div class="d-card">
-      <svg class="d-icon" viewBox="0 0 48 48" fill="none">
-        <path d="M24 6C17.4 6 12 11.4 12 18c0 10.5 12 24 12 24s12-13.5 12-24c0-6.6-5.4-12-12-12z" stroke="#6B1A2A" stroke-width="2"/>
-        <circle cx="24" cy="18" r="4" fill="#C9A358"/>
-      </svg>
-      <div class="d-label">Мекенжайы</div>
-      <div class="d-val">«Томирис»</div>
-      <div class="d-sub">Астана қ., Қорғалжын шоссе, 9</div>
-      <a class="map-btn" href="https://2gis.kz/astana/geo/70000001074996677" target="_blank" rel="noopener">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-        2GIS-те ашу
-      </a>
-    </div>
-
-  </div>
-</section>
-
-<!-- ══ ORNAMENT BAND 2: ромб (diamond chain) ══ -->
-<svg class="kz-band" height="28" viewBox="0 0 1200 28" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1200" height="28" fill="#FDF6EC"/>
-  <defs>
-    <pattern id="dchain" x="0" y="0" width="40" height="28" patternUnits="userSpaceOnUse">
-      <polygon points="20,4 28,14 20,24 12,14" fill="none" stroke="#C9A358" stroke-width="1.2" opacity="0.55"/>
-      <line x1="0" y1="14" x2="12" y2="14" stroke="#C9A358" stroke-width="1" opacity="0.35"/>
-      <line x1="28" y1="14" x2="40" y2="14" stroke="#C9A358" stroke-width="1" opacity="0.35"/>
-      <circle cx="20" cy="14" r="2" fill="#C9A358" opacity="0.5"/>
-    </pattern>
-  </defs>
-  <rect width="1200" height="28" fill="url(#dchain)"/>
-</svg>
-
-<!-- ══ ТОЙ ИЕСІ ══ -->
-<div class="toy-iesi-wrap" style="background:var(--cream);padding:3.5rem 2rem;text-align:center;position:relative;overflow:hidden;">
-  <div style="position:absolute;inset:0;background-image:radial-gradient(circle,var(--gold) 1px,transparent 1px);background-size:38px 38px;opacity:0.07;pointer-events:none;"></div>
-
-  <div class="reveal" style="position:relative;max-width:420px;margin:0 auto;">
-
-    <!-- top ornament row -->
-    <div class="toy-iesi-ornrow" style="display:flex;align-items:center;justify-content:center;gap:0.7rem;margin-bottom:1.5rem;">
-      <svg width="60" height="16" viewBox="0 0 60 16"><path d="M0 8 L8 2 L16 8 L24 2 L32 8 L40 2 L48 8 L56 2 L60 4" stroke="#C9A358" stroke-width="1.3" fill="none" opacity="0.55"/><circle cx="0" cy="8" r="2" fill="#C9A358" opacity="0.5"/><circle cx="60" cy="4" r="2" fill="#C9A358" opacity="0.5"/></svg>
-      <svg width="18" height="18" viewBox="0 0 20 20"><polygon points="10,1 12.5,7.5 19,7.5 14,12 16,18.5 10,14.5 4,18.5 6,12 1,7.5 7.5,7.5" fill="#C9A358"/></svg>
-      <svg width="60" height="16" viewBox="0 0 60 16" style="transform:scaleX(-1)"><path d="M0 8 L8 2 L16 8 L24 2 L32 8 L40 2 L48 8 L56 2 L60 4" stroke="#C9A358" stroke-width="1.3" fill="none" opacity="0.55"/><circle cx="0" cy="8" r="2" fill="#C9A358" opacity="0.5"/><circle cx="60" cy="4" r="2" fill="#C9A358" opacity="0.5"/></svg>
-    </div>
-
-    <!-- card -->
-    <div class="toy-iesi-card" style="border:1px solid var(--gold-p);border-top:3px solid var(--gold);border-bottom:3px solid var(--gold);padding:2.2rem 2rem;position:relative;background:#fff;">
-      <div style="position:absolute;inset:6px;border:1px solid rgba(201,163,88,0.2);pointer-events:none;"></div>
-      <div style="position:absolute;top:-6px;left:50%;transform:translateX(-50%) rotate(45deg);width:10px;height:10px;background:var(--gold);"></div>
-      <div style="position:absolute;bottom:-6px;left:50%;transform:translateX(-50%) rotate(45deg);width:10px;height:10px;background:var(--gold);"></div>
-      <div style="position:absolute;left:-6px;top:50%;transform:translateY(-50%) rotate(45deg);width:10px;height:10px;background:var(--gold);"></div>
-      <div style="position:absolute;right:-6px;top:50%;transform:translateY(-50%) rotate(45deg);width:10px;height:10px;background:var(--gold);"></div>
-
-      <p style="font-family:'Raleway',sans-serif;font-size:0.62rem;letter-spacing:0.45em;text-transform:uppercase;color:var(--bx-l);margin-bottom:1rem;">Той иесі</p>
-
-      <div class="toy-iesi-sh" style="margin:0 auto 1rem;width:44px;height:44px;">
-        <svg width="44" height="44" viewBox="0 0 52 52" fill="none">
-          <circle cx="26" cy="26" r="24" stroke="#C9A358" stroke-width="1.2" stroke-dasharray="3 2"/>
-          <circle cx="26" cy="26" r="15" stroke="#C9A358" stroke-width="1.4"/>
-          <circle cx="26" cy="26" r="4" fill="#C9A358" opacity="0.6"/>
-          <line x1="26" y1="22" x2="26" y2="11" stroke="#C9A358" stroke-width="1.2"/>
-          <line x1="26" y1="30" x2="26" y2="41" stroke="#C9A358" stroke-width="1.2"/>
-          <line x1="22" y1="26" x2="11" y2="26" stroke="#C9A358" stroke-width="1.2"/>
-          <line x1="30" y1="26" x2="41" y2="26" stroke="#C9A358" stroke-width="1.2"/>
-          <line x1="23.5" y1="23.5" x2="15.5" y2="15.5" stroke="#C9A358" stroke-width="0.9"/>
-          <line x1="28.5" y1="28.5" x2="36.5" y2="36.5" stroke="#C9A358" stroke-width="0.9"/>
-          <line x1="28.5" y1="23.5" x2="36.5" y2="15.5" stroke="#C9A358" stroke-width="0.9"/>
-          <line x1="23.5" y1="28.5" x2="15.5" y2="36.5" stroke="#C9A358" stroke-width="0.9"/>
-        </svg>
+      <div style="margin-bottom:1.3rem;display:flex;align-items:center;justify-content:center;gap:0.5rem;">
+        <div style="height:1px;flex:1;max-width:70px;background:linear-gradient(to right,transparent,rgba(196,150,90,0.4));"></div>
+        <svg width="13" height="13" viewBox="0 0 20 20"><polygon points="10,1 12.5,7.5 19,7.5 14,12 16,18.5 10,14.5 4,18.5 6,12 1,7.5 7.5,7.5" fill="#C4965A" opacity="0.75"/></svg>
+        <svg width="7" height="7" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="none" stroke="#C4965A" stroke-width="1.2" opacity="0.5"/><circle cx="5" cy="5" r="1.5" fill="#C4965A" opacity="0.45"/></svg>
+        <svg width="13" height="13" viewBox="0 0 20 20"><polygon points="10,1 12.5,7.5 19,7.5 14,12 16,18.5 10,14.5 4,18.5 6,12 1,7.5 7.5,7.5" fill="#C4965A" opacity="0.75"/></svg>
+        <div style="height:1px;flex:1;max-width:70px;background:linear-gradient(to left,transparent,rgba(196,150,90,0.4));"></div>
       </div>
 
-      <p class="toy-iesi-name" style="font-family:'Cinzel Decorative',serif;font-size:clamp(1.8rem,5vw,2.8rem);color:var(--bx);letter-spacing:0.05em;line-height:1.2;text-shadow:0 2px 12px rgba(107,26,42,0.1);">Бахыт</p>
+      <p class="i-upper">
+        Құрметті ағайын-туыс,<br>
+        бауырлар, құда-жекжат,<br>
+        нағашы-жиен,<br>
+        бөлелер, дос-жарандар,<br>
+        әріптестер, көршілер!
+      </p>
+      <p class="i-mid">Сіздерді</p>
+      <p class="i-names">Аспандияр мен Жұлдыздың</p>
+      <p class="i-lower">
+        үйлену тойына арналған<br>
+        ақ дастарханының<br>
+        қадірлі қонағы болуға<br>
+        шақырамыз!
+      </p>
 
-      <div style="display:flex;align-items:center;justify-content:center;gap:0.8rem;margin-top:1rem;">
-        <div style="height:1px;width:40px;background:linear-gradient(to right,transparent,var(--gold));"></div>
-        <svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 6.2,3.8 10,3.8 7,6.2 8.1,10 5,7.6 1.9,10 3,6.2 0,3.8 3.8,3.8" fill="#C9A358"/></svg>
-        <div style="height:1px;width:40px;background:linear-gradient(to left,transparent,var(--gold));"></div>
+      <div style="margin-top:1.2rem;display:flex;align-items:center;justify-content:center;gap:0.5rem;">
+        <div style="height:1px;flex:1;max-width:70px;background:linear-gradient(to right,transparent,rgba(196,150,90,0.35));"></div>
+        <svg width="8" height="8" viewBox="0 0 10 10"><polygon points="5,0 6.1,3.6 10,3.6 7,5.9 8,9.5 5,7.3 2,9.5 3,5.9 0,3.6 3.9,3.6" fill="#C4965A" opacity="0.65"/></svg>
+        <div style="height:1px;flex:1;max-width:70px;background:linear-gradient(to left,transparent,rgba(196,150,90,0.35));"></div>
       </div>
     </div>
-
-    <!-- bottom ornament row -->
-    <div class="toy-iesi-ornrow" style="display:flex;align-items:center;justify-content:center;gap:0.7rem;margin-top:1.5rem;">
-      <svg width="40" height="14" viewBox="0 0 40 14"><polyline points="0,7 8,2 16,7 24,2 32,7 40,2" stroke="#C9A358" stroke-width="1.2" fill="none" opacity="0.45"/></svg>
-      <svg width="14" height="14" viewBox="0 0 20 20"><polygon points="10,2 12,8 18,8 13,12 15,18 10,14 5,18 7,12 2,8 8,8" fill="#C9A358" opacity="0.6"/></svg>
-      <svg width="40" height="14" viewBox="0 0 40 14" style="transform:scaleX(-1)"><polyline points="0,7 8,2 16,7 24,2 32,7 40,2" stroke="#C9A358" stroke-width="1.2" fill="none" opacity="0.45"/></svg>
-    </div>
-
   </div>
 </div>
 
-<!-- ══ ORNAMENT BAND 3: ою-өрнек (stepped Kazakh) ══ -->
-<svg class="kz-band" height="32" viewBox="0 0 1200 32" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1200" height="32" fill="#550F1E"/>
+<!-- BAND 3 -->
+<svg class="kz-band" height="26" viewBox="0 0 1200 26" preserveAspectRatio="none">
+  <rect width="1200" height="26" fill="#C2D1B4" opacity="0.7"/>
   <defs>
-    <pattern id="kzstep" x="0" y="0" width="48" height="32" patternUnits="userSpaceOnUse">
-      <!-- Kazakh stepped/staircase motif -->
-      <polyline points="0,28 4,28 4,20 8,20 8,12 12,12 12,20 16,20 16,28 20,28 20,20 24,20 24,12 28,12 28,20 32,20 32,28 36,28 36,20 40,20 40,12 44,12 44,20 48,20 48,28" fill="none" stroke="#C9A358" stroke-width="1.2" opacity="0.55"/>
-      <!-- top dots -->
-      <circle cx="8" cy="9" r="2" fill="#C9A358" opacity="0.5"/>
-      <circle cx="24" cy="9" r="2" fill="#C9A358" opacity="0.5"/>
-      <circle cx="40" cy="9" r="2" fill="#C9A358" opacity="0.5"/>
+    <pattern id="kzst" x="0" y="0" width="46" height="26" patternUnits="userSpaceOnUse">
+      <polyline points="0,22 4,22 4,15 8,15 8,9 12,9 12,15 16,15 16,22 20,22 20,15 24,15 24,9 28,9 28,15 32,15 32,22 36,22 36,15 40,15 40,9 44,9 44,15 46,15 46,22" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="1.1"/>
+      <circle cx="8" cy="6" r="1.6" fill="rgba(255,255,255,0.6)"/>
+      <circle cx="24" cy="6" r="1.6" fill="rgba(255,255,255,0.6)"/>
+      <circle cx="40" cy="6" r="1.6" fill="rgba(255,255,255,0.6)"/>
     </pattern>
   </defs>
-  <rect width="1200" height="32" fill="url(#kzstep)"/>
+  <rect width="1200" height="26" fill="url(#kzst)"/>
+</svg>
+
+<!-- ══ DETAILS ══ -->
+<section class="det-sec">
+  <div class="reveal">
+    <p class="s-lbl">Шара туралы</p>
+    <h2 class="s-ttl">Той мәліметтері</h2>
+    <div class="kzd">
+      <div class="ln"></div>
+      <svg width="15" height="15" viewBox="0 0 20 20"><polygon points="10,2 12,8 18,8 13,12 15,18 10,14 5,18 7,12 2,8 8,8" fill="#C4965A" opacity="0.8"/></svg>
+      <div class="ln r"></div>
+    </div>
+  </div>
+  <div class="det-grid reveal">
+    <div class="d-card">
+      <svg class="d-icon" viewBox="0 0 48 48" fill="none">
+        <rect x="6" y="10" width="36" height="32" rx="2" stroke="#B5C4A0" stroke-width="2"/>
+        <path d="M6 18h36" stroke="#B5C4A0" stroke-width="2"/>
+        <path d="M16 6v8M32 6v8" stroke="#C4965A" stroke-width="2.3" stroke-linecap="round"/>
+        <rect x="14" y="24" width="6" height="6" rx="1" fill="#C4965A" opacity="0.6"/>
+        <rect x="28" y="24" width="6" height="6" rx="1" fill="#C4965A" opacity="0.6"/>
+      </svg>
+      <div class="d-lbl">Күні</div>
+      <div class="d-val">31 Шілде</div>
+      <div class="d-sub">2026 жыл, жұма</div>
+    </div>
+    <div class="d-card">
+      <svg class="d-icon" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="16" stroke="#B5C4A0" stroke-width="2"/>
+        <path d="M24 14v10l7 4" stroke="#C4965A" stroke-width="2.3" stroke-linecap="round"/>
+      </svg>
+      <div class="d-lbl">Уақыты</div>
+      <div class="d-val">18:00</div>
+      <div class="d-sub"></div>
+    </div>
+    <div class="d-card">
+      <svg class="d-icon" viewBox="0 0 48 48" fill="none">
+        <path d="M24 6C17.4 6 12 11.4 12 18c0 10.5 12 24 12 24s12-13.5 12-24c0-6.6-5.4-12-12-12z" stroke="#B5C4A0" stroke-width="2"/>
+        <circle cx="24" cy="18" r="4" fill="#C4965A" opacity="0.6"/>
+      </svg>
+      <div class="d-lbl">Мекенжайы</div>
+      <div class="d-val">«Томирис»</div>
+      <div class="d-sub">Астана қ., Қорғалжын шоссе, 9</div>
+      <a class="map-btn" href="https://2gis.kz/astana/geo/70000001074996677" target="_blank" rel="noopener">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        2GIS-те ашу
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- BAND 4 -->
+<svg class="kz-band" height="24" viewBox="0 0 1200 24" preserveAspectRatio="none">
+  <rect width="1200" height="24" fill="#F6F2EE"/>
+  <defs>
+    <pattern id="flrl" x="0" y="0" width="54" height="24" patternUnits="userSpaceOnUse">
+      <path d="M0 12 Q9 2 18 12 Q27 22 36 12 Q45 2 54 12" stroke="#C2D1B4" stroke-width="1.3" fill="none"/>
+      <path d="M0 12 Q9 22 18 12 Q27 2 36 12 Q45 22 54 12" stroke="#C2D1B4" stroke-width="0.7" fill="none" opacity="0.5"/>
+      <circle cx="18" cy="12" r="2" fill="#C2D1B4" opacity="0.65"/>
+      <circle cx="36" cy="12" r="2" fill="#C2D1B4" opacity="0.65"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="24" fill="url(#flrl)"/>
+</svg>
+
+<!-- ══ ТОЙ ИЕСІ ══ -->
+<div class="iesi-wrap" style="background:var(--bg-3);padding:3.5rem 2rem;text-align:center;position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:0;background-image:radial-gradient(circle,rgba(180,160,210,0.1) 1px,transparent 1px);background-size:36px 36px;pointer-events:none;"></div>
+  <div class="reveal" style="position:relative;max-width:380px;margin:0 auto;">
+
+    <div class="iesi-ornrow" style="display:flex;align-items:center;justify-content:center;gap:0.6rem;margin-bottom:1.3rem;">
+      <div style="height:1px;width:55px;background:linear-gradient(to right,transparent,rgba(191,176,208,0.7));"></div>
+      <svg width="14" height="14" viewBox="0 0 20 20"><polygon points="10,1 12.5,7.5 19,7.5 14,12 16,18.5 10,14.5 4,18.5 6,12 1,7.5 7.5,7.5" fill="#BFB0D0" opacity="0.8"/></svg>
+      <svg width="9" height="9" viewBox="0 0 10 10"><polygon points="5,0 6.1,3.6 10,3.6 7,5.9 8,9.5 5,7.3 2,9.5 3,5.9 0,3.6 3.9,3.6" fill="#C4965A" opacity="0.6"/></svg>
+      <svg width="14" height="14" viewBox="0 0 20 20"><polygon points="10,1 12.5,7.5 19,7.5 14,12 16,18.5 10,14.5 4,18.5 6,12 1,7.5 7.5,7.5" fill="#BFB0D0" opacity="0.8"/></svg>
+      <div style="height:1px;width:55px;background:linear-gradient(to left,transparent,rgba(191,176,208,0.7));"></div>
+    </div>
+
+    <div class="iesi-card" style="background:var(--white);border:1px solid rgba(191,176,208,0.3);border-top:2px solid var(--rose-d);border-bottom:2px solid var(--rose-d);padding:2rem 1.8rem;position:relative;">
+      <div style="position:absolute;inset:7px;border:1px solid rgba(191,176,208,0.12);pointer-events:none;"></div>
+      <div style="position:absolute;top:-5px;left:50%;transform:translateX(-50%) rotate(45deg);width:9px;height:9px;background:var(--rose-d);"></div>
+      <div style="position:absolute;bottom:-5px;left:50%;transform:translateX(-50%) rotate(45deg);width:9px;height:9px;background:var(--rose-d);"></div>
+      <div style="position:absolute;left:-5px;top:50%;transform:translateY(-50%) rotate(45deg);width:9px;height:9px;background:var(--rose-d);"></div>
+      <div style="position:absolute;right:-5px;top:50%;transform:translateY(-50%) rotate(45deg);width:9px;height:9px;background:var(--rose-d);"></div>
+
+      <p style="font-family:'Raleway',sans-serif;font-size:0.58rem;letter-spacing:0.45em;text-transform:uppercase;color:var(--sage-d);margin-bottom:0.9rem;">Той иесі</p>
+
+      <div class="iesi-sh" style="margin:0 auto 0.9rem;width:38px;height:38px;">
+        <svg width="38" height="38" viewBox="0 0 52 52" fill="none">
+          <circle cx="26" cy="26" r="23" stroke="#BFB0D0" stroke-width="1.2" stroke-dasharray="3 2" opacity="0.7"/>
+          <circle cx="26" cy="26" r="14" stroke="#BFB0D0" stroke-width="1.3" opacity="0.7"/>
+          <circle cx="26" cy="26" r="3.5" fill="#BFB0D0" opacity="0.5"/>
+          <line x1="26" y1="22" x2="26" y2="12" stroke="#BFB0D0" stroke-width="1.1" opacity="0.6"/>
+          <line x1="26" y1="30" x2="26" y2="40" stroke="#BFB0D0" stroke-width="1.1" opacity="0.6"/>
+          <line x1="22" y1="26" x2="12" y2="26" stroke="#BFB0D0" stroke-width="1.1" opacity="0.6"/>
+          <line x1="30" y1="26" x2="40" y2="26" stroke="#BFB0D0" stroke-width="1.1" opacity="0.6"/>
+          <line x1="23.5" y1="23.5" x2="16" y2="16" stroke="#BFB0D0" stroke-width="0.9" opacity="0.4"/>
+          <line x1="28.5" y1="28.5" x2="36" y2="36" stroke="#BFB0D0" stroke-width="0.9" opacity="0.4"/>
+          <line x1="28.5" y1="23.5" x2="36" y2="16" stroke="#BFB0D0" stroke-width="0.9" opacity="0.4"/>
+          <line x1="23.5" y1="28.5" x2="16" y2="36" stroke="#BFB0D0" stroke-width="0.9" opacity="0.4"/>
+        </svg>
+      </div>
+
+      <p style="font-family:'Marck Script',cursive;font-size:clamp(2.4rem,7.5vw,3.8rem);color:#7A6D90;text-shadow:0 2px 10px rgba(180,160,210,0.2);line-height:1.15;">Бахыт</p>
+
+      <div style="display:flex;align-items:center;justify-content:center;gap:0.7rem;margin-top:0.9rem;">
+        <div style="height:1px;width:34px;background:linear-gradient(to right,transparent,var(--gold));"></div>
+        <svg width="8" height="8" viewBox="0 0 10 10"><polygon points="5,0 6.1,3.6 10,3.6 7,5.9 8,9.5 5,7.3 2,9.5 3,5.9 0,3.6 3.9,3.6" fill="#C4965A" opacity="0.75"/></svg>
+        <div style="height:1px;width:34px;background:linear-gradient(to left,transparent,var(--gold));"></div>
+      </div>
+    </div>
+
+    <div class="iesi-ornrow" style="display:flex;align-items:center;justify-content:center;gap:0.6rem;margin-top:1.3rem;">
+      <div style="height:1px;width:45px;background:linear-gradient(to right,transparent,rgba(194,209,180,0.7));"></div>
+      <svg width="11" height="11" viewBox="0 0 20 20"><polygon points="10,2 12,8 18,8 13,12 15,18 10,14 5,18 7,12 2,8 8,8" fill="#C2D1B4" opacity="0.8"/></svg>
+      <div style="height:1px;width:45px;background:linear-gradient(to left,transparent,rgba(194,209,180,0.7));"></div>
+    </div>
+  </div>
+</div>
+
+<!-- BAND 5 -->
+<svg class="kz-band" height="24" viewBox="0 0 1200 24" preserveAspectRatio="none">
+  <rect width="1200" height="24" fill="#D4C5E2" opacity="0.55"/>
+  <defs>
+    <pattern id="irek" x="0" y="0" width="36" height="24" patternUnits="userSpaceOnUse">
+      <polyline points="0,19 9,5 18,19 27,5 36,19" fill="none" stroke="rgba(255,255,255,0.65)" stroke-width="1.2"/>
+      <circle cx="9" cy="5" r="1.5" fill="rgba(255,255,255,0.6)"/>
+      <circle cx="27" cy="5" r="1.5" fill="rgba(255,255,255,0.6)"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="24" fill="url(#irek)"/>
 </svg>
 
 <!-- ══ COUNTDOWN ══ -->
 <div class="cd-wrap">
   <div class="reveal">
-    <p class="s-label light"></p>
-    <h2 class="s-title light">Тойға дейін</h2>
+    <p class="s-lbl"></p>
+    <h2 class="s-ttl">Тойға дейін</h2>
     <div class="kzd">
-      <div class="ln" style="background:linear-gradient(to right,transparent,var(--gold))"></div>
-      <svg width="18" height="18" viewBox="0 0 20 20"><polygon points="10,2 12,8 18,8 13,12 15,18 10,14 5,18 7,12 2,8 8,8" fill="#C9A358"/></svg>
-      <div class="ln r" style="background:linear-gradient(to left,transparent,var(--gold))"></div>
+      <div class="ln"></div>
+      <svg width="15" height="15" viewBox="0 0 20 20"><polygon points="10,2 12,8 18,8 13,12 15,18 10,14 5,18 7,12 2,8 8,8" fill="#C4965A" opacity="0.8"/></svg>
+      <div class="ln r"></div>
     </div>
   </div>
   <div class="cd-track reveal" id="countdown">
@@ -550,228 +739,158 @@ body{background:var(--cream);color:var(--text);font-family:'Raleway',sans-serif;
   </div>
 </div>
 
-<!-- ══ ORNAMENT BAND 4: гүл (floral scroll) ══ -->
-<svg class="kz-band" height="34" viewBox="0 0 1200 34" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1200" height="34" fill="#F5E8D0"/>
-  <defs>
-    <pattern id="floral" x="0" y="0" width="60" height="34" patternUnits="userSpaceOnUse">
-      <path d="M0 17 Q10 5 20 17 Q30 29 40 17 Q50 5 60 17" stroke="#C9A358" stroke-width="1.3" fill="none" opacity="0.5"/>
-      <path d="M0 17 Q10 29 20 17 Q30 5 40 17 Q50 29 60 17" stroke="#C9A358" stroke-width="0.7" fill="none" opacity="0.3"/>
-      <circle cx="20" cy="17" r="2.5" fill="#C9A358" opacity="0.45"/>
-      <circle cx="40" cy="17" r="2.5" fill="#C9A358" opacity="0.45"/>
-      <polygon points="0,17 3,14 6,17 3,20" fill="#C9A358" opacity="0.4"/>
-      <polygon points="60,17 57,14 54,17 57,20" fill="#C9A358" opacity="0.4"/>
-    </pattern>
-  </defs>
-  <rect width="1200" height="34" fill="url(#floral)"/>
+<!-- BAND floral light -->
+<svg class="kz-band" height="24" viewBox="0 0 1200 24" preserveAspectRatio="none">
+  <rect width="1200" height="24" fill="#F6F2EE"/>
+  <rect width="1200" height="24" fill="url(#flrl)"/>
 </svg>
 
 <!-- ══ RSVP ══ -->
 <div class="rsvp-wrap">
-  <div class="rsvp-inner">
+  <div class="rsvp-in">
     <div class="reveal">
-      <p class="s-label">Жауап беріңіз</p>
-      <h2 class="s-title">Қатысуды растау</h2>
+      <p class="s-lbl">Жауап беріңіз</p>
+      <h2 class="s-ttl">Қатысуды растау</h2>
       <div class="kzd">
         <div class="ln"></div>
-        <svg width="18" height="18" viewBox="0 0 20 20"><polygon points="10,2 12,8 18,8 13,12 15,18 10,14 5,18 7,12 2,8 8,8" fill="#C9A358"/></svg>
+        <svg width="15" height="15" viewBox="0 0 20 20"><polygon points="10,2 12,8 18,8 13,12 15,18 10,14 5,18 7,12 2,8 8,8" fill="#C4965A" opacity="0.8"/></svg>
         <div class="ln r"></div>
       </div>
     </div>
     <div class="reveal">
       <div class="rsvp-form" id="rsvpForm">
-        <div class="f-group">
-          <label class="f-label">Толық аты-жөніңіз (ТАӘ)</label>
-          <input type="text" class="f-input" id="r-name" placeholder="Аты-жөніңіз">
+        <div class="f-g">
+          <label class="f-lbl">Толық аты-жөніңіз (ТАӘ)</label>
+          <input type="text" class="f-in" id="r-name" placeholder="Аты-жөніңіз">
         </div>
-        <div class="f-group">
-          <label class="f-label">Келесіз бе?</label>
-          <div class="radio-group">
-            <label class="radio-label"><input type="radio" name="attend" value="yes"><span class="radio-box">✓ &nbsp;Иә, келемін</span></label>
-            <label class="radio-label"><input type="radio" name="attend" value="no"><span class="radio-box">✗ &nbsp;Келе алмаймын</span></label>
+        <div class="f-g">
+          <label class="f-lbl">Келесіз бе?</label>
+          <div class="rg">
+            <label class="rl"><input type="radio" name="attend" value="yes"><span class="rb">✓ &nbsp;Иә, келемін</span></label>
+            <label class="rl"><input type="radio" name="attend" value="no"><span class="rb">✗ &nbsp;Келе алмаймын</span></label>
           </div>
         </div>
-        <div class="f-group">
-          <label class="f-label">Қанша адам?</label>
-          <div class="radio-group">
-            <label class="radio-label"><input type="radio" name="guests" value="1"><span class="radio-box">👤 Жалғыз</span></label>
-            <label class="radio-label"><input type="radio" name="guests" value="2"><span class="radio-box">👫 Жұбайыммен</span></label>
+        <div class="f-g">
+          <label class="f-lbl">Қанша адам?</label>
+          <div class="rg">
+            <label class="rl"><input type="radio" name="guests" value="1"><span class="rb">👤 Жалғыз</span></label>
+            <label class="rl"><input type="radio" name="guests" value="2"><span class="rb">👫 Жұбаймен</span></label>
           </div>
         </div>
         <button class="rsvp-btn" onclick="submitRSVP()">Жіберу &nbsp;✦</button>
       </div>
       <div class="rsvp-ok" id="rsvpOk">
-        <svg width="52" height="52" viewBox="0 0 52 52" fill="none" style="margin:0 auto 1rem;display:block;">
-          <circle cx="26" cy="26" r="24" stroke="#C9A358" stroke-width="1.5"/>
-          <path d="M15 26l8 9 14-15" stroke="#6B1A2A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg width="48" height="48" viewBox="0 0 52 52" fill="none" style="margin:0 auto 1rem;display:block;">
+          <circle cx="26" cy="26" r="23" stroke="#C2D1B4" stroke-width="1.5"/>
+          <path d="M15 26l8 9 14-15" stroke="#7A6D90" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <p>Рахмет! Жауабыңыз қабылданды.<br><span style="font-size:1rem;opacity:0.8;">Сізді мерекемізде асыға күтеміз! 🌹</span></p>
+        <p>Рахмет! Жауабыңыз қабылданды.<br><span style="font-size:1rem;opacity:0.75;">Тойымызда сізді күтеміз! 🌸</span></p>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══ ORNAMENT BAND 5: ирек (zigzag + dots) ══ -->
-<svg class="kz-band" height="28" viewBox="0 0 1200 28" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="1200" height="28" fill="#3A0B14"/>
-  <defs>
-    <pattern id="irek" x="0" y="0" width="40" height="28" patternUnits="userSpaceOnUse">
-      <polyline points="0,22 10,6 20,22 30,6 40,22" fill="none" stroke="#C9A358" stroke-width="1.4" opacity="0.55"/>
-      <circle cx="10" cy="6" r="1.5" fill="#C9A358" opacity="0.6"/>
-      <circle cx="30" cy="6" r="1.5" fill="#C9A358" opacity="0.6"/>
-      <circle cx="0"  cy="22" r="1.5" fill="#C9A358" opacity="0.4"/>
-      <circle cx="20" cy="22" r="1.5" fill="#C9A358" opacity="0.4"/>
-      <circle cx="40" cy="22" r="1.5" fill="#C9A358" opacity="0.4"/>
-    </pattern>
-  </defs>
-  <rect width="1200" height="28" fill="url(#irek)"/>
-</svg>
-
 <!-- ══ FOOTER ══ -->
 <footer class="footer">
-  <div style="margin-bottom:1.5rem;position:relative;">
-    <svg width="70" height="70" viewBox="0 0 70 70" fill="none">
-      <circle cx="35" cy="35" r="32" stroke="#C9A358" stroke-width="1" stroke-dasharray="4 3" opacity="0.4"/>
-      <circle cx="35" cy="35" r="22" stroke="#C9A358" stroke-width="1.2" opacity="0.55"/>
-      <circle cx="35" cy="35" r="6" fill="#C9A358" opacity="0.45"/>
-      <line x1="35" y1="29" x2="35" y2="13" stroke="#C9A358" stroke-width="1.2"/>
-      <line x1="35" y1="41" x2="35" y2="57" stroke="#C9A358" stroke-width="1.2"/>
-      <line x1="29" y1="35" x2="13" y2="35" stroke="#C9A358" stroke-width="1.2"/>
-      <line x1="41" y1="35" x2="57" y2="35" stroke="#C9A358" stroke-width="1.2"/>
-      <line x1="31.5" y1="31.5" x2="21" y2="21" stroke="#C9A358" stroke-width="0.9"/>
-      <line x1="38.5" y1="38.5" x2="49" y2="49" stroke="#C9A358" stroke-width="0.9"/>
-      <line x1="38.5" y1="31.5" x2="49" y2="21" stroke="#C9A358" stroke-width="0.9"/>
-      <line x1="31.5" y1="38.5" x2="21" y2="49" stroke="#C9A358" stroke-width="0.9"/>
-      <polygon points="35,8 37,13 35,18 33,13" fill="#C9A358" opacity="0.7"/>
-      <polygon points="35,52 37,57 35,62 33,57" fill="#C9A358" opacity="0.7"/>
-      <polygon points="8,35 13,37 18,35 13,33" fill="#C9A358" opacity="0.7"/>
-      <polygon points="52,35 57,37 62,35 57,33" fill="#C9A358" opacity="0.7"/>
+  <div style="margin-bottom:1.2rem;">
+    <svg width="62" height="62" viewBox="0 0 70 70" fill="none">
+      <circle cx="35" cy="35" r="30" stroke="#BFB0D0" stroke-width="1" stroke-dasharray="4 3" opacity="0.6"/>
+      <circle cx="35" cy="35" r="20" stroke="#BFB0D0" stroke-width="1.2" opacity="0.65"/>
+      <circle cx="35" cy="35" r="5" fill="#BFB0D0" opacity="0.5"/>
+      <line x1="35" y1="30" x2="35" y2="15" stroke="#BFB0D0" stroke-width="1.1" opacity="0.65"/>
+      <line x1="35" y1="40" x2="35" y2="55" stroke="#BFB0D0" stroke-width="1.1" opacity="0.65"/>
+      <line x1="30" y1="35" x2="15" y2="35" stroke="#BFB0D0" stroke-width="1.1" opacity="0.65"/>
+      <line x1="40" y1="35" x2="55" y2="35" stroke="#BFB0D0" stroke-width="1.1" opacity="0.65"/>
+      <line x1="32" y1="32" x2="22" y2="22" stroke="#BFB0D0" stroke-width="0.9" opacity="0.4"/>
+      <line x1="38" y1="38" x2="48" y2="48" stroke="#BFB0D0" stroke-width="0.9" opacity="0.4"/>
+      <line x1="38" y1="32" x2="48" y2="22" stroke="#BFB0D0" stroke-width="0.9" opacity="0.4"/>
+      <line x1="32" y1="38" x2="22" y2="48" stroke="#BFB0D0" stroke-width="0.9" opacity="0.4"/>
+      <polygon points="35,9 37.5,14 35,19 32.5,14" fill="#BFB0D0" opacity="0.65"/>
+      <polygon points="35,51 37.5,56 35,61 32.5,56" fill="#BFB0D0" opacity="0.65"/>
+      <polygon points="9,35 14,37.5 19,35 14,32.5" fill="#BFB0D0" opacity="0.65"/>
+      <polygon points="51,35 56,37.5 61,35 56,32.5" fill="#BFB0D0" opacity="0.65"/>
     </svg>
   </div>
-  <div class="footer-names">Аспандияр & Жұлдыз</div>
-  <p class="footer-text" style="margin-top:0.5rem;">31 · 07 · 2026 &nbsp;·&nbsp; Астана, «Томирис»</p>
-  <p style="margin-top:1.8rem;font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:var(--gold-p);opacity:0.38;font-style:italic;position:relative;">
-    Бақытты отбасының бастауы — сіздермен бірге
-  </p>
+  <div class="f-names">Аспандияр & Жұлдыз</div>
+  <p class="f-text" style="margin-top:0.4rem;">31 · 07 · 2026 &nbsp;·&nbsp; Астана, «Томирис» тойханасы</p>
+  <p style="margin-top:1.5rem;font-family:'Cormorant Garamond',serif;font-size:0.88rem;color:var(--text-s);opacity:0.55;font-style:italic;position:relative;">Бақытты отбасының бастауы — сіздермен бірге</p>
 </footer>
 
 <script>
-/* ── ENTER + SLOW SCROLL ── */
-function enterSite() {
+function enterSite(){
   document.getElementById('ov').classList.add('hidden');
-
-  const music = document.getElementById('bg-music');
-  music.volume = 0.55;
-  music.play().catch(() => {});
+  const m=document.getElementById('bg-music');
+  m.volume=0.5;m.play().catch(()=>{});
   document.getElementById('mb').classList.add('visible');
-
-  // Petals
-  const pi = setInterval(spawnPetal, 700);
-  setTimeout(() => clearInterval(pi), 30000);
-
-  // Slow continuous scroll — starts after 1.2s, scrolls at ~35px per 50ms
-  setTimeout(() => {
-    let scrolling = true;
-
-    // Stop auto-scroll when user touches/clicks/scrolls manually
-    const stopScroll = () => { scrolling = false; };
-    window.addEventListener('wheel',       stopScroll, { once: true });
-    window.addEventListener('touchstart',  stopScroll, { once: true });
-    window.addEventListener('mousedown',   stopScroll, { once: true });
-    window.addEventListener('keydown',     stopScroll, { once: true });
-
-    const pageH = document.body.scrollHeight - window.innerHeight;
-    const step = () => {
-      if (!scrolling) return;
-      // Stop at the RSVP section
-      const rsvp = document.querySelector('.rsvp-wrap');
-      if (rsvp && window.scrollY >= rsvp.offsetTop - 80) return;
-      if (window.scrollY >= pageH) return;
-      window.scrollBy({ top: 1.6, behavior: 'instant' });
-      setTimeout(step, 18); // ~88px/s — gentle cruise
+  const pi=setInterval(spawnPetal,650);
+  setTimeout(()=>clearInterval(pi),28000);
+  setTimeout(()=>{
+    let go=true;
+    const stop=()=>{go=false;};
+    ['wheel','touchstart','mousedown','keydown'].forEach(e=>window.addEventListener(e,stop,{once:true}));
+    const pH=document.body.scrollHeight-window.innerHeight;
+    const step=()=>{
+      if(!go)return;
+      const r=document.querySelector('.rsvp-wrap');
+      if(r&&window.scrollY>=r.offsetTop-80)return;
+      if(window.scrollY>=pH)return;
+      window.scrollBy({top:1.6,behavior:'instant'});
+      setTimeout(step,18);
     };
     step();
-  }, 1200);
+  },1200);
 }
 
-/* ── MUSIC TOGGLE ── */
-let musicPlaying = true;
-function toggleMusic() {
-  const m = document.getElementById('bg-music');
-  musicPlaying ? m.pause() : m.play();
-  musicPlaying = !musicPlaying;
-  document.getElementById('icon-play').style.display  = musicPlaying ? 'none'  : 'block';
-  document.getElementById('icon-pause').style.display = musicPlaying ? 'block' : 'none';
+let mPlay=true;
+function toggleMusic(){
+  const m=document.getElementById('bg-music');
+  mPlay?m.pause():m.play();mPlay=!mPlay;
+  document.getElementById('icon-play').style.display=mPlay?'none':'block';
+  document.getElementById('icon-pause').style.display=mPlay?'block':'none';
 }
 
-/* ── COUNTDOWN ── */
-const wDate = new Date('2026-07-31T18:00:00');
-function tick() {
-  const d = wDate - new Date();
-  if (d <= 0) { document.getElementById('countdown').innerHTML = '<p style="color:var(--gold-l);font-family:\'Cinzel Decorative\',serif;font-size:1.4rem;">Той басталды! 🎉</p>'; return; }
-  const pad = n => String(n).padStart(2,'0');
-  document.getElementById('cd-days').textContent  = pad(Math.floor(d/86400000));
-  document.getElementById('cd-hours').textContent = pad(Math.floor(d%86400000/3600000));
-  document.getElementById('cd-mins').textContent  = pad(Math.floor(d%3600000/60000));
-  document.getElementById('cd-secs').textContent  = pad(Math.floor(d%60000/1000));
+const wD=new Date('2026-07-31T18:00:00');
+function tick(){
+  const d=wD-new Date();
+  if(d<=0){document.getElementById('countdown').innerHTML='<p style="font-family:\'Cinzel\',serif;font-size:1.3rem;color:#7A6D90;">Той басталды! 🎉</p>';return;}
+  const p=n=>String(n).padStart(2,'0');
+  document.getElementById('cd-days').textContent=p(Math.floor(d/86400000));
+  document.getElementById('cd-hours').textContent=p(Math.floor(d%86400000/3600000));
+  document.getElementById('cd-mins').textContent=p(Math.floor(d%3600000/60000));
+  document.getElementById('cd-secs').textContent=p(Math.floor(d%60000/1000));
 }
-tick(); setInterval(tick, 1000);
+tick();setInterval(tick,1000);
 
-/* ── RSVP ── */
-async function submitRSVP() {
-  const name   = document.getElementById('r-name').value.trim();
-  const attend = document.querySelector('input[name="attend"]:checked');
-  const guests = document.querySelector('input[name="guests"]:checked');
-  if (!name)   { alert('Аты-жөніңізді енгізіңіз.'); return; }
-  if (!attend) { alert('Қатысу-қатыспауыңызды белгілеңіз.'); return; }
-  if (!guests) { alert('Қанша адам екенін белгілеңіз.'); return; }
-
-  const btn = document.querySelector('.rsvp-btn');
-  btn.textContent = 'Жіберілуде...';
-  btn.disabled = true;
-
-  try {
-    const res = await fetch('https://formspree.io/f/mzdyrvee', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({
-        name:    name,
-        attend:  attend.value === 'yes' ? 'Иә, келемін' : 'Келе алмаймын',
-        guests:  guests.value === '1'   ? 'Жалғыз'      : 'Жұбаймен',
-      })
+async function submitRSVP(){
+  const name=document.getElementById('r-name').value.trim();
+  const attend=document.querySelector('input[name="attend"]:checked');
+  const guests=document.querySelector('input[name="guests"]:checked');
+  if(!name){alert('Аты-жөніңізді енгізіңіз.');return;}
+  if(!attend){alert('Қатысу-қатыспауыңызды белгілеңіз.');return;}
+  if(!guests){alert('Қанша адам екенін белгілеңіз.');return;}
+  const btn=document.querySelector('.rsvp-btn');
+  btn.textContent='Жіберілуде...';btn.disabled=true;
+  try{
+    const r=await fetch('https://formspree.io/f/mzdyrvee',{
+      method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({name,attend:attend.value==='yes'?'Иә, келемін':'Келе алмаймын',guests:guests.value==='1'?'Жалғыз':'Жұбаймен'})
     });
-
-    if (res.ok) {
-      document.getElementById('rsvpForm').style.display = 'none';
-      document.getElementById('rsvpOk').classList.add('show');
-    } else {
-      btn.textContent = 'Жіберу ✦';
-      btn.disabled = false;
-      alert('Қате кетті. Қайта көріңіз.');
-    }
-  } catch {
-    btn.textContent = 'Жіберу ✦';
-    btn.disabled = false;
-    alert('Интернет байланысын тексеріңіз.');
-  }
+    if(r.ok){document.getElementById('rsvpForm').style.display='none';document.getElementById('rsvpOk').classList.add('show');}
+    else{btn.textContent='Жіберу ✦';btn.disabled=false;alert('Қате кетті.');}
+  }catch{btn.textContent='Жіберу ✦';btn.disabled=false;alert('Интернет байланысын тексеріңіз.');}
 }
 
-/* ── PETALS ── */
-const pcols = ['#C9A358','#E2C47A','#F0DFA8','#8C2438','#d4748a'];
-function spawnPetal() {
-  const p = document.createElement('div');
-  p.classList.add('petal');
-  const sz=Math.random()*10+6, dur=Math.random()*9+8, delay=Math.random()*3;
-  p.style.cssText = `left:${Math.random()*100}vw;width:${sz}px;height:${sz*1.3}px;animation-duration:${dur}s;animation-delay:${delay}s;border-radius:50% 0 50% 0;background:${pcols[Math.floor(Math.random()*pcols.length)]};`;
-  document.body.appendChild(p);
-  setTimeout(() => p.remove(), (dur + delay) * 1000);
+/* Petals: soft lilac, white, sage, cream */
+const pc=['rgba(212,197,226,0.85)','rgba(255,255,255,0.8)','rgba(194,209,180,0.8)','rgba(240,233,248,0.75)','rgba(255,255,255,0.55)'];
+function spawnPetal(){
+  const p=document.createElement('div');p.classList.add('petal');
+  const sz=Math.random()*9+5,dur=Math.random()*10+8,delay=Math.random()*4;
+  p.style.cssText=`left:${Math.random()*100}vw;width:${sz}px;height:${sz*1.4}px;animation-duration:${dur}s;animation-delay:${delay}s;border-radius:${Math.random()>0.5?'50% 0 50% 0':'60% 40% 70% 30%'};background:${pc[Math.floor(Math.random()*pc.length)]};`;
+  document.body.appendChild(p);setTimeout(()=>p.remove(),(dur+delay)*1000);
 }
 
-/* ── SCROLL REVEAL ── */
-const io = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-}, { threshold: 0.12 });
-document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+const io=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){el.target.classList.add('visible');io.unobserve(el.target);}});},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 </script>
 </body>
 </html>
